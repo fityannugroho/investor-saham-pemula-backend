@@ -37,8 +37,18 @@ model Article {
   authorId String @db.VarChar(16) @map("author_id")
   title String @db.VarChar(255)
   content String @db.Text
+  tags ArticleTag[]
   createdAt DateTime @db.Timestamp @default(now()) @map("created_at")
   updatedAt DateTime @db.Timestamp @default(now()) @map("updated_at")
 
   @@map("articles")
+}
+
+model ArticleTag {
+  id String @id @db.VarChar(16)
+  name String @db.VarChar(100) @unique
+  articleId String @db.VarChar(16) @map("article_id")
+  article Article @relation(fields: [articleId], references: [id])
+
+  @@map("article_tags")
 }
