@@ -16,9 +16,19 @@ model User {
   name String @db.VarChar(255)
   email String @unique @db.VarChar(320)
   password String @db.Text
+  role Role @relation(fields: [roleId], references: [id])
+  roleId String @db.VarChar(16) @map("role_id")
   articles Article[]
 
   @@map("users")
+}
+
+model Role {
+  id String @id @db.VarChar(16)
+  name String @db.VarChar(100) @unique
+  members User[]
+
+  @@map("roles")
 }
 
 model Article {
