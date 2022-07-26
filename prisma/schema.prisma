@@ -16,6 +16,19 @@ model User {
   name String @db.VarChar(255)
   email String @unique @db.VarChar(320)
   password String @db.Text
+  Articles Article[]
 
   @@map("users")
+}
+
+model Article {
+  id String @id @db.VarChar(16)
+  author User @relation(fields: [authorId], references: [id])
+  authorId String @db.VarChar(16) @map("author_id")
+  title String @db.VarChar(255)
+  content String @db.Text
+  createdAt DateTime @db.Timestamp @default(now()) @map("created_at")
+  updatedAt DateTime @db.Timestamp @default(now()) @map("updated_at")
+
+  @@map("articles")
 }
