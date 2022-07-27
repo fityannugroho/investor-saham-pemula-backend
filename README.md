@@ -137,3 +137,53 @@ Use the following endpoint to get a role by id.
                 "message": "Internal Server Error"
               }
 ```
+
+### Users
+
+#### 1. Create a user
+
+Use the following endpoint to create a user.
+
+```raml
+/users:
+  post:
+    description: Create a user
+    body:
+      application/json:
+        example: |
+          {
+            "name": "John Doe",
+            "email": "johndoe@email.com",
+            "password": "secr3tp45Sw0rd",
+            "roleId": "<role id>"
+          }
+    responses:
+      201:
+        body:
+          application/json:
+            example: |
+              {
+                statusCode: 201,
+                message: "User created successfully",
+                data: {
+                  "userId": "<user id>",
+                }
+              }
+      400:
+        body:
+          application/json:
+            example: |
+              {
+                "statusCode": 400,
+                "message": ["<error message>", ...],
+                "error": "Bad Request"
+              }
+      500:
+        body:
+          application/json:
+            example: |
+              {
+                "statusCode": 500,
+                "message": "Internal Server Error"
+              }
+```
