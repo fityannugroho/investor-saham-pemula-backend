@@ -87,3 +87,53 @@ Use the following endpoint to get all roles.
 ```
 
 > If there is no role, the response will be an **empty array** `[]`.
+
+#### 2. Get role by id
+
+Use the following endpoint to get a role by id.
+
+```raml
+/roles/{id}:
+  get:
+    description: Get role by id
+    pathParameters:
+      - name: id
+        required: true
+        type: string
+        description: The role id.
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "id": "<role id>",
+                "name": "ADMIN"
+              }
+      400:
+        body:
+          application/json:
+            example: |
+              {
+                "statusCode": 400,
+                "message": ["<error message>", ...],
+                "error": "Bad Request"
+              }
+      404:
+        body:
+          application/json:
+            example: |
+              {
+                "statusCode": 404,
+                "message": "Role not found",
+                "error": "Not Found"
+              }
+      500:
+        body:
+          application/json:
+            example: |
+              {
+                "statusCode": 500,
+                "message": "Internal Server Error"
+              }
+```
