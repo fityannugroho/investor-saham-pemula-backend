@@ -9,6 +9,6 @@ export class RolesController {
   @Get()
   async findAll(@Query() queries: FindAllQueries) {
     const { sortBy = 'id', sortOrder = 'asc' } = queries;
-    return this.rolesService.findAll({ orderBy: { [sortBy]: sortOrder } });
+    return this.rolesService.getAllRoles({ [sortBy]: sortOrder });
   }
 }

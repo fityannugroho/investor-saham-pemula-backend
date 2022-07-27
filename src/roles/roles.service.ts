@@ -7,12 +7,13 @@ export class RolesService {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
-   * Find all roles.
+   * Get all roles. Optionally sort by a field and order.
+   * @param {Prisma.RoleOrderByWithRelationInput} orderBy The field to sort by and the order to sort in.
+   * @returns {Promise<Role[]>} All roles.
    */
-  async findAll(params: {
-    orderBy?: Prisma.RoleOrderByWithRelationInput;
-  }): Promise<Role[]> {
-    const { orderBy } = params;
+  async getAllRoles(
+    orderBy?: Prisma.RoleOrderByWithRelationInput,
+  ): Promise<Role[]> {
     return this.prisma.role.findMany({ orderBy });
   }
 }
