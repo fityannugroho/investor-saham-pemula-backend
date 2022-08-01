@@ -78,6 +78,16 @@ model Applicant {
   userId String @db.VarChar(16) @unique @map("user_id")
   user User @relation(fields: [userId], references: [id])
   address String @db.Text
+  applications Application[]
 
   @@map("applicants")
+}
+
+model Application {
+  id String @id @db.VarChar(16)
+  applicantId String @db.VarChar(16) @map("applicant_id")
+  applicant Applicant @relation(fields: [applicantId], references: [id])
+  position String @db.VarChar(100)
+
+  @@map("applications")
 }
