@@ -42,14 +42,7 @@ export class UsersService {
     const id = nanoid(16);
     const hashedPassword = await bcrypt.hash(password, 10);
     const result = await this.prisma.user.create({
-      data: {
-        id,
-        name,
-        email,
-        password: hashedPassword,
-        // TODO: Remove `roleId` when deleted role schema.
-        roleId: 'HO_OoZF9mRFPgIlh',
-      },
+      data: { id, name, email, password: hashedPassword },
       select: { id: true },
     });
 
