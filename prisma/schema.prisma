@@ -39,6 +39,7 @@ model Article {
   createdAt DateTime @db.Timestamp @default(now()) @map("created_at")
   updatedAt DateTime @db.Timestamp @default(now()) @map("updated_at")
   tags ArticleTag[]
+  event Event?
 
   @@map("articles")
 }
@@ -50,4 +51,13 @@ model ArticleTag {
   name String @db.VarChar(100)
 
   @@map("article_tags")
+}
+
+model Event {
+  id String @id @db.VarChar(16)
+  articleId String @db.VarChar(16) @unique @map("article_id")
+  article Article @relation(fields: [articleId], references: [id])
+  startedAt DateTime @db.Timestamp @map("started_at")
+
+  @@map("events")
 }
