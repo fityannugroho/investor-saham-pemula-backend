@@ -143,3 +143,50 @@ Use the following endpoint to get a user by id.
                 "message": "Internal Server Error"
               }
 ```
+
+### Admins
+
+#### 1. Assign admin role
+
+Use the following endpoint to assign an user to be an admin.
+
+```raml
+/admins:
+  post:
+    description: Assign an user to be an admin
+    body:
+      application/json:
+        example: |
+          {
+            "userId": "<user id>",
+          }
+    responses:
+      201:
+        body:
+          application/json:
+            example: |
+              {
+                statusCode: 201,
+                message: "Admin role assigned successfully",
+                data: {
+                  "adminId": "<admin id>",
+                }
+              }
+      400:
+        body:
+          application/json:
+            example: |
+              {
+                "statusCode": 400,
+                "message": ["<error message>", ...],
+                "error": "Bad Request"
+              }
+      500:
+        body:
+          application/json:
+            example: |
+              {
+                "statusCode": 500,
+                "message": "Internal Server Error"
+              }
+```
