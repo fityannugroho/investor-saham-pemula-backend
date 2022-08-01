@@ -4,9 +4,17 @@ The Back-End of Investor Saham Pemula Website. Built with [NestJS](https://nestj
 
 ## Installation
 
-```bash
-$ npm install
-```
+1. Clone this repository.
+2. Install the dependencies. Run `npm install`.
+3. Create `.env` file by simply copying the `.env.example` file and rename it.
+4. Configure the `.env` file with the database connection.
+5. Generate the database structure. Run `npm run migrate:reset`.
+
+> Warning! If you use `npm run migrate:reset` command, all tables will be dropped and recreated. All data in the tables will be lost.
+
+6. Finally, you can [run the application](#running-the-app).
+
+> To build the application, run `npm run build`.
 
 ## Running the app
 
