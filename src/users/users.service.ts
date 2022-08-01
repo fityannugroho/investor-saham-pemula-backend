@@ -6,16 +6,12 @@ import {
 import * as bcrypt from 'bcrypt';
 import { nanoid } from 'nanoid';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { RolesService } from 'src/roles/roles.service';
 import { AddUserDataType } from './dto/add-user-data.type';
 import { GetUserByIdType } from './dto/get-user-by-id.type';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly rolesService: RolesService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   /**
    * Verify that the email address is not already in use.
@@ -33,36 +29,27 @@ export class UsersService {
   }
 
   /**
-   * Verify that the role id is exists.
-   * @param roleId The role id to verify.
-   * @throws {BadRequestException} If the role id does not exist.
-   */
-  protected async verifyRoleId(roleId: string): Promise<void> {
-    try {
-      await this.rolesService.getRoleById(roleId);
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new BadRequestException(['Unknown role id']);
-      }
-    }
-  }
-
-  /**
    * Create a new user.
    * @param {AddUserDataType} data The user data.
    * @returns The id of the new user.
    * @throws {BadRequestException} If the email address is already in use, or if the role id does not exist.
    */
   async addUser(data: AddUserDataType): Promise<string> {
-    const { name, email, password, roleId } = data;
+    const { name, email, password } = data;
 
     await this.verifyNewEmail(email);
-    await this.verifyRoleId(roleId);
 
     const id = nanoid(16);
     const hashedPassword = await bcrypt.hash(password, 10);
     const result = await this.prisma.user.create({
-      data: { id, name, email, password: hashedPassword, roleId },
+      data: {
+        id,
+        name,
+        email,
+        password: hashedPassword,
+        // TODO: Remove `roleId` when deleted role schema.
+        roleId: 'HO_OoZF9mRFPgIlh',
+      },
       select: { id: true },
     });
 
@@ -78,7 +65,7 @@ export class UsersService {
   async getUserById(id: string): Promise<GetUserByIdType> {
     const user = await this.prisma.user.findUnique({
       where: { id },
-      select: { id: true, name: true, email: true, role: true },
+      select: { id: true, name: true, email: true },
     });
     if (!user) {
       throw new NotFoundException('User not found');

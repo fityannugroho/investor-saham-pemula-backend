@@ -155,7 +155,6 @@ Use the following endpoint to create a user.
             "name": "John Doe",
             "email": "johndoe@email.com",
             "password": "secr3tp45Sw0rd",
-            "roleId": "<role id>"
           }
     responses:
       201:
@@ -210,10 +209,6 @@ Use the following endpoint to get a user by id.
                 "id": "<user id>",
                 "name": "John Doe",
                 "email": "johndoe@email.com",
-                "role": {
-                  id: "<role id>",
-                  name: "ADMIN",
-                }
               }
       400:
         body:
