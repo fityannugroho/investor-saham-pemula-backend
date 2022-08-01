@@ -8,6 +8,7 @@ import { nanoid } from 'nanoid';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { RolesService } from 'src/roles/roles.service';
 import { AddUserDataType } from './dto/add-user-data.type';
+import { GetUserByIdType } from './dto/get-user-by-id.type';
 
 @Injectable()
 export class UsersService {
@@ -66,5 +67,23 @@ export class UsersService {
     });
 
     return result.id;
+  }
+
+  /**
+   * Get a user by id.
+   * @param {string} id The user id.
+   * @returns The user data.
+   * @throws {NotFoundException} If the user does not exist.
+   */
+  async getUserById(id: string): Promise<GetUserByIdType> {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      select: { id: true, name: true, email: true, role: true },
+    });
+    if (!user) {
+      throw new NotFoundException(['User not found']);
+    }
+
+    return user;
   }
 }

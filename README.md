@@ -50,11 +50,11 @@ Use the following endpoint to get all roles.
       - name: sortBy
         required: false
         type: string
-        description: The field to sort by.
+        description: The field to sort by
       - name: sortOrder
         required: false
         type: string
-        description: The sort order (asc or desc).
+        description: The sort order (asc or desc)
     responses:
       200:
         body:
@@ -100,7 +100,7 @@ Use the following endpoint to get a role by id.
       - name: id
         required: true
         type: string
-        description: The role id.
+        description: The role id
     responses:
       200:
         body:
@@ -177,6 +177,61 @@ Use the following endpoint to create a user.
                 "statusCode": 400,
                 "message": ["<error message>", ...],
                 "error": "Bad Request"
+              }
+      500:
+        body:
+          application/json:
+            example: |
+              {
+                "statusCode": 500,
+                "message": "Internal Server Error"
+              }
+```
+
+#### 2. Get user by id
+
+Use the following endpoint to get a user by id.
+
+```raml
+/users/{id}:
+  get:
+    description: Get user by id
+    pathParameters:
+      - name: id
+        required: true
+        type: string
+        description: The user id
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "id": "<user id>",
+                "name": "John Doe",
+                "email": "johndoe@email.com",
+                "role": {
+                  id: "<role id>",
+                  name: "ADMIN",
+                }
+              }
+      400:
+        body:
+          application/json:
+            example: |
+              {
+                "statusCode": 400,
+                "message": ["<error message>", ...],
+                "error": "Bad Request"
+              }
+      404:
+        body:
+          application/json:
+            example: |
+              {
+                "statusCode": 404,
+                "message": "User not found",
+                "error": "Not Found"
               }
       500:
         body:

@@ -1,5 +1,6 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { AddUserPayload } from './dto/add-user.payload';
+import { GetUserByIdParam } from './dto/get-user-by-id.param';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -14,5 +15,11 @@ export class UsersController {
       message: 'User created successfully',
       data: { userId },
     };
+  }
+
+  @Get('/:id')
+  async getUserById(@Param() params: GetUserByIdParam) {
+    const { id } = params;
+    return await this.usersService.getUserById(id);
   }
 }
