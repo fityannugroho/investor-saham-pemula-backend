@@ -190,3 +190,54 @@ Use the following endpoint to assign an user to be an admin.
                 "message": "Internal Server Error"
               }
 ```
+
+#### 2. Delete admin
+
+Use the following endpoint to delete an admin.
+
+```raml
+/admins:
+  delete:
+    description: Delete an admin
+    body:
+      application/json:
+        example: |
+          {
+            "id": "<admin id>",
+          }
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                statusCode: 200,
+                message: "Admin deleted successfully",
+              }
+      400:
+        body:
+          application/json:
+            example: |
+              {
+                "statusCode": 400,
+                "message": ["<error message>", ...],
+                "error": "Bad Request"
+              }
+      404:
+        body:
+          application/json:
+            example: |
+              {
+                "statusCode": 404,
+                "message": "Admin not found",
+                "error": "Not Found"
+              }
+      500:
+        body:
+          application/json:
+            example: |
+              {
+                "statusCode": 500,
+                "message": "Internal Server Error"
+              }
+```
