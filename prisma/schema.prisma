@@ -17,6 +17,7 @@ model User {
   email String @unique @db.VarChar(320)
   password String @db.Text
   admin Admin?
+  applicant Applicant?
 
   @@map("users")
 }
@@ -70,4 +71,13 @@ model Ebook {
   fileName String @db.VarChar(255) @map("file_name")
 
   @@map("ebooks")
+}
+
+model Applicant {
+  id String @id @db.VarChar(16)
+  userId String @db.VarChar(16) @unique @map("user_id")
+  user User @relation(fields: [userId], references: [id])
+  address String @db.Text
+
+  @@map("applicants")
 }
