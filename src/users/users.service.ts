@@ -81,7 +81,7 @@ export class UsersService {
       select: { id: true, name: true, email: true, role: true },
     });
     if (!user) {
-      throw new NotFoundException(['User not found']);
+      throw new NotFoundException('User not found');
     }
 
     return user;
