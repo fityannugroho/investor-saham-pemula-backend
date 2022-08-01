@@ -40,6 +40,7 @@ model Article {
   updatedAt DateTime @db.Timestamp @default(now()) @map("updated_at")
   tags ArticleTag[]
   event Event?
+  ebook Ebook?
 
   @@map("articles")
 }
@@ -60,4 +61,13 @@ model Event {
   startedAt DateTime @db.Timestamp @map("started_at")
 
   @@map("events")
+}
+
+model Ebook {
+  id String @id @db.VarChar(16)
+  articleId String @db.VarChar(16) @unique @map("article_id")
+  article Article @relation(fields: [articleId], references: [id])
+  fileName String @db.VarChar(255) @map("file_name")
+
+  @@map("ebooks")
 }
