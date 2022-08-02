@@ -1,8 +1,6 @@
-import { IsNotEmpty, IsString, Length } from 'class-validator';
+import { PickType } from '@nestjs/mapped-types';
+import { AdminValidator } from './AdminValidator';
 
-export class GetAdminByIdParam {
-  @IsNotEmpty()
-  @IsString()
-  @Length(16, 16)
-  id: string;
-}
+export class GetAdminByIdParam extends PickType(AdminValidator, [
+  'id',
+] as const) {}

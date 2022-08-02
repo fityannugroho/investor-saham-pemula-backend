@@ -1,8 +1,6 @@
-import { IsNotEmpty, IsString, Length } from 'class-validator';
+import { PickType } from '@nestjs/mapped-types';
+import { AdminValidator } from './AdminValidator';
 
-export class AssignAdminRolePayload {
-  @IsNotEmpty()
-  @IsString()
-  @Length(16, 16)
-  userId: string;
-}
+export class AssignAdminRolePayload extends PickType(AdminValidator, [
+  'userId',
+] as const) {}
