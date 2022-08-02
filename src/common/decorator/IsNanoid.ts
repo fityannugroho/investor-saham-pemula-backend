@@ -18,7 +18,7 @@ export function IsNanoid(
       constraints: [length],
       options: Object.assign(
         {
-          message: '$property must be $constraint1 characters of nanoid.',
+          message: '$property must be $constraint1 characters of nanoid',
         },
         validationOptions,
       ),

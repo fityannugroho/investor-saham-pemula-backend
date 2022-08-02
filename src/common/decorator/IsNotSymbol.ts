@@ -17,7 +17,7 @@ export function IsNotSymbol(validationOptions?: ValidationOptions) {
       constraints: [],
       options: Object.assign(
         {
-          message: '$property must not contain any symbols except whitespace.',
+          message: '$property must not contain any symbols except whitespace',
         },
         validationOptions,
       ),
