@@ -1,8 +1,6 @@
-import { IsNotEmpty, IsString, Length } from 'class-validator';
+import { PickType } from '@nestjs/mapped-types';
+import { UserValidator } from './UserValidator';
 
-export class GetUserByIdParam {
-  @IsNotEmpty()
-  @IsString()
-  @Length(16, 16)
-  id: string;
-}
+export class GetUserByIdParam extends PickType(UserValidator, [
+  'id',
+] as const) {}

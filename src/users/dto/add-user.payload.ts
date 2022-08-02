@@ -1,17 +1,8 @@
-import { IsEmail, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { PickType } from '@nestjs/mapped-types';
+import { UserValidator } from './UserValidator';
 
-export class AddUserPayload {
-  @IsNotEmpty()
-  @IsString()
-  @MaxLength(255)
-  name: string;
-
-  @IsNotEmpty()
-  @IsEmail()
-  @MaxLength(320)
-  email: string;
-
-  @IsNotEmpty()
-  @IsString()
-  password: string;
-}
+export class AddUserPayload extends PickType(UserValidator, [
+  'name',
+  'email',
+  'password',
+] as const) {}
