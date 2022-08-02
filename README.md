@@ -191,7 +191,57 @@ Use the following endpoint to assign an user to be an admin.
               }
 ```
 
-#### 2. Delete admin
+#### 2. Get admin by id
+
+Use the following endpoint to get an admin by id.
+
+```raml
+/admins/{id}:
+  get:
+    description: Get admin by id
+    pathParameters:
+      - name: id
+        required: true
+        type: string
+        description: The admin id
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "id": "<admin id>",
+                "userId": "<user id>"
+              }
+      400:
+        body:
+          application/json:
+            example: |
+              {
+                "statusCode": 400,
+                "message": ["<error message>", ...],
+                "error": "Bad Request"
+              }
+      404:
+        body:
+          application/json:
+            example: |
+              {
+                "statusCode": 404,
+                "message": "Admin not found",
+                "error": "Not Found"
+              }
+      500:
+        body:
+          application/json:
+            example: |
+              {
+                "statusCode": 500,
+                "message": "Internal Server Error"
+              }
+```
+
+#### 3. Delete admin
 
 Use the following endpoint to delete an admin.
 
