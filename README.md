@@ -115,6 +115,7 @@ Use the following endpoint to get a user by id.
                 "id": "<user id>",
                 "name": "John Doe",
                 "email": "johndoe@email.com",
+                "isAdmin": false,
               }
       400:
         body:

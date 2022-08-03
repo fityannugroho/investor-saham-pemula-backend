@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { nanoid } from 'nanoid';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -52,13 +53,17 @@ export class UsersService {
   /**
    * Get a user by id.
    * @param {string} id The user id.
-   * @returns The user data.
+   * @param {Prisma.UserSelect} select Any fields to select (optional).
+   * @returns The user data. Id, name, and email will returned by default.
    * @throws {NotFoundException} If the user does not exist.
    */
-  async getUserById(id: string): Promise<GetUserByIdType> {
+  async getUserById(
+    id: string,
+    select?: Prisma.UserSelect,
+  ): Promise<GetUserByIdType> {
     const user = await this.prisma.user.findUnique({
       where: { id },
-      select: { id: true, name: true, email: true },
+      select: select ?? { id: true, name: true, email: true },
     });
     if (!user) {
       throw new NotFoundException('User not found');
