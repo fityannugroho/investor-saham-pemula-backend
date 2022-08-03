@@ -292,3 +292,52 @@ Use the following endpoint to delete an admin.
                 "message": "Internal Server Error"
               }
 ```
+
+### Articles
+
+#### 1. Create an article
+
+Use the following endpoint to create an article.
+
+```raml
+/articles:
+  post:
+    description: Create an article
+    body:
+      application/json:
+        example: |
+          {
+            "authorId": "<admin id>",
+            "title": "What is Lorem Ipsum?",
+            "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+          }
+    responses:
+      201:
+        body:
+          application/json:
+            example: |
+              {
+                "statusCode": 201,
+                "message": "Article created successfully",
+                "data": {
+                  "articleId": "<article id>",
+                }
+              }
+      400:
+        body:
+          application/json:
+            example: |
+              {
+                "statusCode": 400,
+                "message": ["<error message>", ...],
+                "error": "Bad Request"
+              }
+      500:
+        body:
+          application/json:
+            example: |
+              {
+                "statusCode": 500,
+                "message": "Internal Server Error"
+              }
+```
