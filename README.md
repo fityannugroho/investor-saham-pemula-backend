@@ -68,9 +68,9 @@ Use the following endpoint to create a user.
           application/json:
             example: |
               {
-                statusCode: 201,
-                message: "User created successfully",
-                data: {
+                "statusCode": 201,
+                "message": "User created successfully",
+                "data": {
                   "userId": "<user id>",
                 }
               }
@@ -166,9 +166,9 @@ Use the following endpoint to assign an user to be an admin.
           application/json:
             example: |
               {
-                statusCode: 201,
-                message: "Admin role assigned successfully",
-                data: {
+                "statusCode": 201,
+                "message": "Admin role assigned successfully",
+                "data": {
                   "adminId": "<admin id>",
                 }
               }
@@ -261,8 +261,8 @@ Use the following endpoint to delete an admin.
           application/json:
             example: |
               {
-                statusCode: 200,
-                message: "Admin deleted successfully",
+                "statusCode": 200,
+                "message": "Admin deleted successfully",
               }
       400:
         body:
