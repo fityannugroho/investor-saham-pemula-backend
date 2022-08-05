@@ -16,7 +16,6 @@ model User {
   name String @db.VarChar(255)
   email String @unique @db.VarChar(320)
   password String @db.Text
-  admin Admin?
   applicant Applicant?
 
   @@map("users")
@@ -24,8 +23,9 @@ model User {
 
 model Admin {
   id String @id @db.VarChar(16)
-  userId String @db.VarChar(16) @unique @map("user_id")
-  user User @relation(fields: [userId], references: [id])
+  name String @db.VarChar(255)
+  email String @unique @db.VarChar(320)
+  password String @db.Text
 
   @@map("admins")
 }

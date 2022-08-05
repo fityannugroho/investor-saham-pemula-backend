@@ -20,11 +20,10 @@ export class UsersController {
   @Get('/:id')
   async getUserById(@Param() params: GetUserByIdParam) {
     const { id } = params;
-    const { name, email, admin } = await this.usersService.getUserById(id, {
+    const { name, email } = await this.usersService.getUserById(id, {
       name: true,
       email: true,
-      admin: true,
     });
-    return { id, name, email, isAdmin: !!admin };
+    return { id, name, email };
   }
 }

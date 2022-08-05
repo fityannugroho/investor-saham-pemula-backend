@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Admin } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { GetAdminByIdType } from './dto/get-admin-by-id.type';
 
 @Injectable()
 export class AdminsService {
@@ -12,8 +12,11 @@ export class AdminsService {
    * @returns The admin.
    * @throws {NotFoundException} If the admin does not exist.
    */
-  async getAdminById(id: string): Promise<Admin> {
-    const admin = await this.prisma.admin.findUnique({ where: { id } });
+  async getAdminById(id: string): Promise<GetAdminByIdType> {
+    const admin = await this.prisma.admin.findUnique({
+      where: { id },
+      select: { id: true, name: true, email: true },
+    });
     if (!admin) {
       throw new NotFoundException('Admin not found');
     }
