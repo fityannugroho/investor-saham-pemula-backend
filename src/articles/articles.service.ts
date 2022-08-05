@@ -26,4 +26,23 @@ export class ArticlesService {
 
     return result.id;
   }
+
+  /**
+   * Get articles, optionally filtered by title and sorted by `date` or `title`. Default: `date`.
+   * @param search The search keyword.
+   * @returns The articles.
+   */
+  async getArticles(search?: string, sortBy: 'date' | 'title' = 'date') {
+    return await this.prisma.article.findMany({
+      where: { title: { contains: search } },
+      orderBy: sortBy === 'title' ? { title: 'asc' } : { createdAt: 'desc' },
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        photo: true,
+        createdAt: true,
+      },
+    });
+  }
 }
