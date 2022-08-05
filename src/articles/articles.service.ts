@@ -29,15 +29,14 @@ export class ArticlesService {
    * @returns The article id.
    */
   async createArticle({
-    authorId,
     title,
     content,
+    writer,
+    photo,
   }: CreateArticlePayload): Promise<string> {
-    await this.verifyAuthorIsAdmin(authorId);
-
     const id = nanoid(16);
     const result = await this.prisma.article.create({
-      data: { id, authorId, title, content },
+      data: { id, title, content, writer, photo },
       select: { id: true },
     });
 

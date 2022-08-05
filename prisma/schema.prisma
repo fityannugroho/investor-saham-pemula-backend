@@ -26,30 +26,24 @@ model Admin {
   id String @id @db.VarChar(16)
   userId String @db.VarChar(16) @unique @map("user_id")
   user User @relation(fields: [userId], references: [id])
-  articles Article[]
 
   @@map("admins")
 }
 
 model Article {
   id String @id @db.VarChar(16)
-  authorId String @db.VarChar(16) @map("author_id")
-  author Admin @relation(fields: [authorId], references: [id])
   title String @db.VarChar(255)
   content String @db.Text
+  writer String @db.VarChar(255)
+  photo String? @db.VarChar(255)
   createdAt DateTime @db.Timestamp @default(now()) @map("created_at")
-  updatedAt DateTime @db.Timestamp @default(now()) @map("updated_at")
-  tags ArticleTag[]
-  event Event?
-  ebook Ebook?
+  updatedAt DateTime @db.Timestamp @default(now()) @updatedAt @map("updated_at")
 
   @@map("articles")
 }
 
 model ArticleTag {
   id String @id @db.VarChar(16)
-  articleId String @db.VarChar(16) @map("article_id")
-  article Article @relation(fields: [articleId], references: [id])
   name String @db.VarChar(100)
 
   @@map("article_tags")
@@ -57,8 +51,6 @@ model ArticleTag {
 
 model Event {
   id String @id @db.VarChar(16)
-  articleId String @db.VarChar(16) @unique @map("article_id")
-  article Article @relation(fields: [articleId], references: [id])
   startedAt DateTime @db.Timestamp @map("started_at")
 
   @@map("events")
@@ -66,8 +58,6 @@ model Event {
 
 model Ebook {
   id String @id @db.VarChar(16)
-  articleId String @db.VarChar(16) @unique @map("article_id")
-  article Article @relation(fields: [articleId], references: [id])
   fileName String @db.VarChar(255) @map("file_name")
 
   @@map("ebooks")
