@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Article } from '@prisma/client';
 import { nanoid } from 'nanoid';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateArticlePayload } from './dto/create-article.payload';
@@ -44,5 +45,18 @@ export class ArticlesService {
         createdAt: true,
       },
     });
+  }
+
+  /**
+   * Get an article by id.
+   * @param id The article id.
+   * @returns The article.
+   */
+  async getArticle(id: string): Promise<Article> {
+    const article = await this.prisma.article.findUnique({ where: { id } });
+    if (!article) {
+      throw new NotFoundException('Article not found');
+    }
+    return article;
   }
 }

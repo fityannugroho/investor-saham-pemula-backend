@@ -1,6 +1,7 @@
-import { Controller, Post, Body, Get, Query } from '@nestjs/common';
+import { Controller, Post, Body, Get, Query, Param } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { CreateArticlePayload } from './dto/create-article.payload';
+import { GetArticleParam } from './dto/get-article.param';
 import { GetArticlesQuery } from './dto/get-articles.query';
 
 @Controller('articles')
@@ -21,5 +22,10 @@ export class ArticlesController {
   async getArticles(@Query() queries: GetArticlesQuery) {
     const { search, sortBy } = queries;
     return await this.articlesService.getArticles(search, sortBy);
+  }
+
+  @Get('/:id')
+  async getArticle(@Param() params: GetArticleParam) {
+    return await this.articlesService.getArticle(params.id);
   }
 }
