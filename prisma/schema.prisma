@@ -11,16 +11,6 @@ datasource db {
   url = env("DATABASE_URL")
 }
 
-model User {
-  id String @id @db.VarChar(16)
-  name String @db.VarChar(255)
-  email String @unique @db.VarChar(320)
-  password String @db.Text
-  applicant Applicant?
-
-  @@map("users")
-}
-
 model Admin {
   id String @id @db.VarChar(16)
   name String @db.VarChar(255)
@@ -42,42 +32,9 @@ model Article {
   @@map("articles")
 }
 
-model ArticleTag {
-  id String @id @db.VarChar(16)
-  name String @db.VarChar(100)
-
-  @@map("article_tags")
-}
-
 model Event {
   id String @id @db.VarChar(16)
   startedAt DateTime @db.Timestamp @map("started_at")
 
   @@map("events")
-}
-
-model Ebook {
-  id String @id @db.VarChar(16)
-  fileName String @db.VarChar(255) @map("file_name")
-
-  @@map("ebooks")
-}
-
-model Applicant {
-  id String @id @db.VarChar(16)
-  userId String @db.VarChar(16) @unique @map("user_id")
-  user User @relation(fields: [userId], references: [id])
-  address String @db.Text
-  applications Application[]
-
-  @@map("applicants")
-}
-
-model Application {
-  id String @id @db.VarChar(16)
-  applicantId String @db.VarChar(16) @map("applicant_id")
-  applicant Applicant @relation(fields: [applicantId], references: [id])
-  position String @db.VarChar(100)
-
-  @@map("applications")
 }
