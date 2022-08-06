@@ -79,4 +79,14 @@ export class ArticlesService {
       data,
     });
   }
+
+  /**
+   * Delete an article.
+   * @param id The article id.
+   * @throws {NotFoundException} If the article is not found.
+   */
+  async deleteArticle(id: string): Promise<void> {
+    await this.getArticle(id);
+    await this.prisma.article.delete({ where: { id } });
+  }
 }

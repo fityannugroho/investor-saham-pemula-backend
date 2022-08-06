@@ -6,6 +6,7 @@ import {
   Query,
   Param,
   Patch,
+  Delete,
 } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { CreateArticlePayload } from './dto/create-article.payload';
@@ -51,6 +52,15 @@ export class ArticlesController {
       statusCode: 200,
       message: 'Article updated successfully',
       data: { ...updatedArticle },
+    };
+  }
+
+  @Delete('/:id')
+  async deleteArticle(@Param() params: GetArticleParam) {
+    await this.articlesService.deleteArticle(params.id);
+    return {
+      statusCode: 200,
+      message: 'Article deleted successfully',
     };
   }
 }
