@@ -52,6 +52,7 @@ export class ArticlesService {
    * Get an article by id.
    * @param id The article id.
    * @returns The article.
+   * @throws {NotFoundException} If the article is not found.
    */
   async getArticle(id: string): Promise<Article> {
     const article = await this.prisma.article.findUnique({ where: { id } });
@@ -66,6 +67,7 @@ export class ArticlesService {
    * @param id The article id.
    * @param data The article data to update.
    * @returns The updated article.
+   * @throws {NotFoundException} If the article is not found.
    */
   async updateArticle(
     id: string,
