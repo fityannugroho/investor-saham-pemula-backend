@@ -1,8 +1,17 @@
-import { Controller, Post, Body, Get, Query, Param } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Query,
+  Param,
+  Patch,
+} from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { CreateArticlePayload } from './dto/create-article.payload';
 import { GetArticleParam } from './dto/get-article.param';
 import { GetArticlesQuery } from './dto/get-articles.query';
+import { UpdateArticlePayload } from './dto/update-article.payload';
 
 @Controller('articles')
 export class ArticlesController {
@@ -27,5 +36,21 @@ export class ArticlesController {
   @Get('/:id')
   async getArticle(@Param() params: GetArticleParam) {
     return await this.articlesService.getArticle(params.id);
+  }
+
+  @Patch('/:id')
+  async updateArticle(
+    @Param() params: GetArticleParam,
+    @Body() payload: UpdateArticlePayload,
+  ) {
+    const updatedArticle = await this.articlesService.updateArticle(
+      params.id,
+      payload,
+    );
+    return {
+      statusCode: 200,
+      message: 'Article updated successfully',
+      data: { ...updatedArticle },
+    };
   }
 }

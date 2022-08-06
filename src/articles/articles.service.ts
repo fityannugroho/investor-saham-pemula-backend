@@ -3,6 +3,7 @@ import { Article } from '@prisma/client';
 import { nanoid } from 'nanoid';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateArticlePayload } from './dto/create-article.payload';
+import { UpdateArticleDataType } from './dto/update-article-data.type';
 
 @Injectable()
 export class ArticlesService {
@@ -58,5 +59,22 @@ export class ArticlesService {
       throw new NotFoundException('Article not found');
     }
     return article;
+  }
+
+  /**
+   * Update an article.
+   * @param id The article id.
+   * @param data The article data to update.
+   * @returns The updated article.
+   */
+  async updateArticle(
+    id: string,
+    data: UpdateArticleDataType,
+  ): Promise<Article> {
+    await this.getArticle(id);
+    return await this.prisma.article.update({
+      where: { id },
+      data,
+    });
   }
 }
