@@ -15,6 +15,104 @@
     "url": "https://github.com/fityannugroho/investor-saham-pemula-backend"
   },
   "paths": {
+    "/auth": {
+      "post": {
+        "summary": "Login",
+        "description": "Login to the system.",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 320
+                  },
+                  "password": {
+                    "type": "string",
+                    "maxLength": 255
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          },
+          "description": "The body of the request."
+        },
+        "responses": {
+          "200": {
+            "description": "**OK**. Returns an access token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "accessToken": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "accessToken"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "statusCode": 201,
+                  "message": "Login successful",
+                  "data": {
+                    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "description": "**Unauthorized**. If the credentials is incorrect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                },
+                "example": {
+                  "statusCode": 401,
+                  "message": "Wrong credentials",
+                  "error": "Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
     "/admins/{id}": {
       "get": {
         "summary": "Get Admin",
@@ -1396,6 +1494,20 @@
           }
         }
       },
+      "Unauthorized": {
+        "description": "**Unauthorized**. If the resource is protected and the user is not authorized to access it.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Unauthorized"
+            },
+            "example": {
+              "statusCode": 401,
+              "message": "Unauthorized"
+            }
+          }
+        }
+      },
       "InternalServerError": {
         "description": "**Internal Server Error**. If there is any error on the server.",
         "content": {
@@ -1441,6 +1553,21 @@
           "statusCode",
           "message",
           "error"
+        ]
+      },
+      "Unauthorized": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "statusCode",
+          "message"
         ]
       },
       "GetArticle": {
@@ -1492,12 +1619,20 @@
       "BasicAuth": {
         "type": "http",
         "scheme": "basic"
+      },
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   },
   "security": [
     {
       "BasicAuth": []
+    },
+    {
+      "BearerAuth": []
     }
   ]
 }
