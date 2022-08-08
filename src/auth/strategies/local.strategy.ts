@@ -9,7 +9,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super({ usernameField: 'email' });
   }
 
-  async validate(username: string, password: string): Promise<string> {
-    return await this.authService.validateAdmin(username, password);
+  async validate(email: string, password: string): Promise<string> {
+    return await this.authService.validateAdmin(email, password);
   }
 }
