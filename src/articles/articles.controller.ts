@@ -7,7 +7,9 @@ import {
   Param,
   Patch,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ArticlesService } from './articles.service';
 import { CreateArticlePayload } from './dto/create-article.payload';
 import { GetArticleParam } from './dto/get-article.param';
@@ -19,6 +21,7 @@ export class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   async createArticle(@Body() payload: CreateArticlePayload) {
     const articleId = await this.articlesService.createArticle(payload);
     return {
@@ -40,6 +43,7 @@ export class ArticlesController {
   }
 
   @Patch('/:id')
+  @UseGuards(JwtAuthGuard)
   async updateArticle(
     @Param() params: GetArticleParam,
     @Body() payload: UpdateArticlePayload,
@@ -56,6 +60,7 @@ export class ArticlesController {
   }
 
   @Delete('/:id')
+  @UseGuards(JwtAuthGuard)
   async deleteArticle(@Param() params: GetArticleParam) {
     await this.articlesService.deleteArticle(params.id);
     return {
