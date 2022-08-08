@@ -1,6 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { GetAdminByIdType } from './dto/get-admin-by-id.type';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AdminsService {
@@ -31,5 +36,30 @@ export class AdminsService {
   async deleteAdmin(id: string): Promise<void> {
     await this.getAdminById(id);
     await this.prisma.admin.delete({ where: { id } });
+  }
+
+  /**
+   * Verify the admin credentials.
+   * @param email The admin email.
+   * @param password The admin password.
+   * @returns The admin id
+   * @throws {UnauthorizedException} If the credentials are incorrect.
+   */
+  async verifyCredentials(email: string, password: string): Promise<string> {
+    const admin = await this.prisma.admin.findUnique({
+      where: { email },
+      select: { id: true, password: true },
+    });
+    if (!admin) {
+      throw new UnauthorizedException('Wrong credentials');
+    }
+
+    const { id, password: hashedPassword } = admin;
+    const isValid = await bcrypt.compare(password, hashedPassword);
+    if (!isValid) {
+      throw new UnauthorizedException('Wrong credentials');
+    }
+
+    return id;
   }
 }
