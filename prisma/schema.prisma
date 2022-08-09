@@ -16,8 +16,16 @@ model Admin {
   name String @db.VarChar(255)
   email String @unique @db.VarChar(320)
   password String @db.Text
+  auth Authentications?
 
   @@map("admins")
+}
+
+model Authentications {
+  id String @id @db.VarChar(16)
+  adminId String @db.VarChar(16) @unique
+  admin Admin @relation(fields: [adminId], references: [id])
+  token String @db.Text
 }
 
 model Article {
