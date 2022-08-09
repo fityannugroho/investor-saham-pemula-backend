@@ -23,8 +23,7 @@ model Admin {
 
 model Authentications {
   id String @id @db.VarChar(16)
-  adminId String @db.VarChar(16) @unique
-  admin Admin @relation(fields: [adminId], references: [id])
+  admin Admin @relation(fields: [id], references: [id])
   token String @db.Text
 }
 
