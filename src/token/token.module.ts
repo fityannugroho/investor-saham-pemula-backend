@@ -5,5 +5,6 @@ import { TokenService } from './token.service';
 @Module({
   imports: [JwtModule],
   providers: [TokenService],
+  exports: [TokenService],
 })
 export class TokenModule {}
