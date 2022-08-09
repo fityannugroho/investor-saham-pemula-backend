@@ -46,41 +46,48 @@ export class TokenService {
    * Save the refresh token to the database.
    * @param token The refresh token to verify.
    * @param id The id that refresh token is associated with.
-   * @throws If failed to save the refresh token.
+   * @returns `true` if the refresh token is saved successfully.
    */
-  async saveRefreshToken(token: string, id: string): Promise<void> {
+  async saveRefreshToken(token: string, id: string): Promise<boolean> {
     const auth = await this.prisma.authentications.create({
       data: { id, token },
     });
-    if (!auth) {
-      throw new Error('Failed to save refresh token');
-    }
+    return !!auth;
+  }
+
+  /**
+   * Get the refresh token from the database.
+   * @param id The id that refresh token is associated with.
+   * @returns The refresh token if found. Otherwise, `null`.
+   */
+  async getRefreshToken(id: string): Promise<string | null> {
+    const auth = await this.prisma.authentications.findUnique({
+      where: { id },
+      select: { token: true },
+    });
+    return auth ? auth.token : null;
   }
 
   /**
    * Verify a refresh token.
    * @param id The id that refresh token is associated with.
    * @param token The refresh token to verify.
-   * @throws If the refresh token is invalid.
+   * @returns `true` if the refresh token is verified.
    */
-  async verifyRefreshToken(id: string, token: string): Promise<void> {
+  async verifyRefreshToken(id: string, token: string): Promise<boolean> {
     const auth = await this.prisma.authentications.findUnique({
       where: { id },
     });
-    if (!auth || auth.token !== token) {
-      throw new Error('Invalid refresh token');
-    }
+    return auth && auth.token === token;
   }
 
   /**
    * Delete the refresh token from the database.
    * @param id The id that refresh token is associated with.
-   * @throws If failed to delete the refresh token.
+   * @returns `true` if the refresh token is deleted successfully.
    */
-  async deleteRefreshToken(id: string): Promise<void> {
+  async deleteRefreshToken(id: string): Promise<boolean> {
     const auth = await this.prisma.authentications.delete({ where: { id } });
-    if (!auth) {
-      throw new Error('Failed to delete refresh token');
-    }
+    return !!auth;
   }
 }

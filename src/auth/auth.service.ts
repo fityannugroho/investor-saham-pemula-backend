@@ -23,10 +23,20 @@ export class AuthService {
   /**
    * Login the admin.
    * @param id The admin id.
-   * @returns The access token.
+   * @returns The access token and the refresh token.
    */
-  async loginAdmin(id: string): Promise<string> {
+  async loginAdmin(id: string) {
     const payload = { id };
-    return await this.tokenService.createAccessToken(payload);
+    const accessToken = await this.tokenService.createAccessToken(payload);
+
+    // Delete the refresh token if it exists.
+    if (await this.tokenService.getRefreshToken(id)) {
+      await this.tokenService.deleteRefreshToken(id);
+    }
+
+    const refreshToken = await this.tokenService.createRefreshToken(payload);
+    await this.tokenService.saveRefreshToken(refreshToken, id);
+
+    return { accessToken, refreshToken };
   }
 }
