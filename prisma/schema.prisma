@@ -17,6 +17,7 @@ model Admin {
   email String @unique @db.VarChar(320)
   password String @db.Text
   auth Auth?
+  articles Article[]
 
   @@map("admins")
 }
@@ -37,6 +38,8 @@ model Article {
   photo String? @db.VarChar(255)
   createdAt DateTime @db.Timestamp @default(now()) @map("created_at")
   updatedAt DateTime @db.Timestamp @default(now()) @updatedAt @map("updated_at")
+  adminId String? @db.VarChar(16) @map("admin_id")
+  admin Admin? @relation(fields: [adminId], references: [id], onDelete: SetNull)
 
   @@map("articles")
 }
