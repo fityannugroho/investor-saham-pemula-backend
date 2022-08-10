@@ -97,20 +97,81 @@
           "400": {
             "$ref": "#/components/responses/BadRequest"
           },
-          "401": {
-            "description": "**Unauthorized**. If the credentials is incorrect.",
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Token",
+        "description": "Update the access token.",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "refreshToken": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "refreshToken"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "**OK**. Returns the updated access token.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Unauthorized"
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "accessToken": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "accessToken"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message",
+                    "data"
+                  ]
                 },
                 "example": {
-                  "statusCode": 401,
-                  "message": "Wrong credentials",
-                  "error": "Unauthorized"
+                  "statusCode": 200,
+                  "message": "Access token updated successfully",
+                  "data": {
+                    "accessToken": "<JWT>"
+                  }
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
           },
           "500": {
             "$ref": "#/components/responses/InternalServerError"

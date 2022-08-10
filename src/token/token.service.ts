@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, JwtVerifyOptions } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { jwtConstants } from './constant';
 
@@ -11,12 +11,18 @@ export class TokenService {
   ) {}
 
   /**
-   * Validate the jwt token.
+   * Verify the jwt token.
    * @param token The token to verify.
+   * @param options The options to verify the token.
    * @returns The payload of the token.
+   * @throws {Error} If the token is invalid.
    */
-  async validateToken(token: string): Promise<any> {
-    return await this.jwt.verifyAsync(token);
+  async verifyJwtToken(token: string, options: JwtVerifyOptions): Promise<any> {
+    try {
+      return await this.jwt.verifyAsync(token, options);
+    } catch (error) {
+      throw new Error('Invalid JWT');
+    }
   }
 
   /**
@@ -70,15 +76,24 @@ export class TokenService {
 
   /**
    * Verify a refresh token.
-   * @param id The id that refresh token is associated with.
-   * @param token The refresh token to verify.
-   * @returns `true` if the refresh token is verified.
+   * @param refreshToken The refresh token to verify.
+   * @throws {Error} If the refresh token is invalid or not exists in database.
+   * @returns The payload of the token.
    */
-  async verifyRefreshToken(id: string, token: string): Promise<boolean> {
-    const auth = await this.prisma.authentications.findUnique({
-      where: { id },
+  async verifyRefreshToken(refreshToken: string): Promise<any> {
+    const payload = await this.verifyJwtToken(refreshToken, {
+      secret: jwtConstants.refreshTokenKey,
     });
-    return auth && auth.token === token;
+
+    const auth = await this.prisma.authentications.findUnique({
+      where: { id: payload.id },
+    });
+
+    if (!auth || auth.token !== refreshToken) {
+      throw new Error('Refresh token not exists');
+    }
+
+    return payload;
   }
 
   /**

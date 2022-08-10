@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { AdminsService } from 'src/admins/admins.service';
 import { TokenService } from 'src/token/token.service';
 
@@ -38,5 +38,20 @@ export class AuthService {
     await this.tokenService.saveRefreshToken(refreshToken, id);
 
     return { accessToken, refreshToken };
+  }
+
+  /**
+   * Update the access token.
+   * @param refreshToken The refresh token.
+   * @returns The access token.
+   * @throws {UnauthorizedException} If the refresh token is invalid.
+   */
+  async updateAccessToken(refreshToken: string): Promise<string> {
+    try {
+      const payload = await this.tokenService.verifyRefreshToken(refreshToken);
+      return await this.tokenService.createAccessToken({ id: payload.id });
+    } catch (error) {
+      throw new BadRequestException(['Invalid refresh token']);
+    }
   }
 }
