@@ -23,7 +23,7 @@ model Admin {
 
 model Authentications {
   id String @id @db.VarChar(16)
-  admin Admin @relation(fields: [id], references: [id])
+  admin Admin @relation(fields: [id], references: [id], onDelete: Cascade)
   token String @db.Text
 }
 
