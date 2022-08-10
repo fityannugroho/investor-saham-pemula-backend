@@ -10,32 +10,25 @@ export class AuthService {
   ) {}
 
   /**
-   * Verify the admin credentials.
+   * Login the admin.
    * @param email The admin email.
    * @param password The admin password.
-   * @returns The admin id
+   * @returns The access token and the refresh token.
    * @throws {UnauthorizedException} If the credentials are incorrect.
    */
-  async validateAdmin(email: string, password: string): Promise<string> {
-    return await this.adminsService.verifyCredentials(email, password);
-  }
-
-  /**
-   * Login the admin.
-   * @param id The admin id.
-   * @returns The access token and the refresh token.
-   */
-  async loginAdmin(id: string) {
-    const payload = { id };
-    const accessToken = await this.tokenService.createAccessToken(payload);
+  async loginAdmin(email: string, password: string) {
+    const adminId = await this.adminsService.verifyCredentials(email, password);
+    const accessToken = await this.tokenService.createAccessToken({ adminId });
 
     // Delete the refresh token if it exists.
-    if (await this.tokenService.getRefreshToken(id)) {
-      await this.tokenService.deleteRefreshToken(id);
+    if (await this.tokenService.getRefreshToken(adminId)) {
+      await this.tokenService.deleteRefreshToken(adminId);
     }
 
-    const refreshToken = await this.tokenService.createRefreshToken(payload);
-    await this.tokenService.saveRefreshToken(refreshToken, id);
+    const refreshToken = await this.tokenService.createRefreshToken({
+      adminId,
+    });
+    await this.tokenService.saveRefreshToken(refreshToken, adminId);
 
     return { accessToken, refreshToken };
   }

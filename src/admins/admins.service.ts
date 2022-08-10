@@ -51,13 +51,13 @@ export class AdminsService {
       select: { id: true, password: true },
     });
     if (!admin) {
-      throw new UnauthorizedException('Wrong credentials');
+      throw new UnauthorizedException('Incorrect credentials');
     }
 
     const { id, password: hashedPassword } = admin;
     const isValid = await bcrypt.compare(password, hashedPassword);
     if (!isValid) {
-      throw new UnauthorizedException('Wrong credentials');
+      throw new UnauthorizedException('Incorrect credentials');
     }
 
     return id;

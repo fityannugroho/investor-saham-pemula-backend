@@ -1,24 +1,17 @@
-import {
-  Body,
-  Controller,
-  Patch,
-  Post,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Patch, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { LoginPayload } from './dto/login.payload';
 import { UpdateTokenPayload } from './dto/update-token.payload';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post()
-  @UseGuards(LocalAuthGuard)
-  async login(@Request() req: any) {
-    const tokens = await this.authService.loginAdmin(req.user);
+  async login(@Body() payload: LoginPayload) {
+    const { email, password } = payload;
+    const tokens = await this.authService.loginAdmin(email, password);
     return {
       statusCode: 201,
       message: 'Login successful',
