@@ -10,6 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Bearer } from 'src/common/decorator/bearer.decorator';
 import { ArticlesService } from './articles.service';
 import { CreateArticlePayload } from './dto/create-article.payload';
 import { GetArticleParam } from './dto/get-article.param';
@@ -22,8 +23,15 @@ export class ArticlesController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  async createArticle(@Body() payload: CreateArticlePayload) {
-    const articleId = await this.articlesService.createArticle(payload);
+  async createArticle(
+    @Body() payload: CreateArticlePayload,
+    @Bearer('id') adminId: string,
+  ) {
+    const articleId = await this.articlesService.createArticle({
+      ...payload,
+      adminId,
+    });
+
     return {
       statusCode: 201,
       message: 'Article created successfully',
