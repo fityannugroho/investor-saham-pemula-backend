@@ -1,23 +1,15 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 /**
- * Get the bearer token from the request header.
+ * Get payload from the bearer token in request header.
+ *
+ * **Note:** This decorator depends on global `PassportModule` in `AppModule`.
  */
 export const Bearer = createParamDecorator(
-  (data: unknown, ctx: ExecutionContext) => {
+  (data: string, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
-    const authHeader = request.headers.authorization;
+    const payload = request.payload;
 
-    if (!authHeader) {
-      return null;
-    }
-
-    const authScheme = authHeader.split(' ')[0];
-    if (authScheme !== 'Bearer') {
-      return null;
-    }
-
-    const token = authHeader.split(' ')[1];
-    return token;
+    return data ? payload?.[data] : payload;
   },
 );
