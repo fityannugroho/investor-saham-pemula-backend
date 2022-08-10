@@ -47,4 +47,18 @@ export class AuthService {
       throw new BadRequestException(['Invalid refresh token']);
     }
   }
+
+  /**
+   * Logout the admin.
+   * @param refreshToken The refresh token.
+   * @throws {BadRequestException} If the refresh token is invalid.
+   */
+  async logoutAdmin(refreshToken: string) {
+    try {
+      const payload = await this.tokenService.verifyRefreshToken(refreshToken);
+      await this.tokenService.deleteRefreshToken(payload.id);
+    } catch (error) {
+      throw new BadRequestException(['Invalid refresh token']);
+    }
+  }
 }

@@ -1,6 +1,14 @@
-import { Body, Controller, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginPayload } from './dto/login.payload';
+import { LogoutPayload } from './dto/logout.payload';
 import { UpdateTokenPayload } from './dto/update-token.payload';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
@@ -29,6 +37,16 @@ export class AuthController {
       statusCode: 200,
       message: 'Access token updated successfully',
       data: { accessToken },
+    };
+  }
+
+  @Delete()
+  @UseGuards(JwtAuthGuard)
+  async logout(@Body() payload: LogoutPayload) {
+    await this.authService.logoutAdmin(payload.refreshToken);
+    return {
+      statusCode: 200,
+      message: 'Logout successful',
     };
   }
 }
