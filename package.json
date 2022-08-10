@@ -21,6 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "migrate": "prisma migrate dev",
     "migrate:reset": "prisma migrate reset",
+    "migrate:deploy": "prisma migrate deploy",
     "seed": "ts-node ./prisma/seed/index.ts"
   },
   "dependencies": {
