@@ -18,16 +18,16 @@ export class AuthService {
    */
   async loginAdmin(email: string, password: string) {
     const adminId = await this.adminsService.verifyCredentials(email, password);
-    const accessToken = await this.tokenService.createAccessToken({ adminId });
+    const payload = { id: adminId };
+
+    const accessToken = await this.tokenService.createAccessToken(payload);
 
     // Delete the refresh token if it exists.
     if (await this.tokenService.getRefreshToken(adminId)) {
       await this.tokenService.deleteRefreshToken(adminId);
     }
 
-    const refreshToken = await this.tokenService.createRefreshToken({
-      adminId,
-    });
+    const refreshToken = await this.tokenService.createRefreshToken(payload);
     await this.tokenService.saveRefreshToken(refreshToken, adminId);
 
     return { accessToken, refreshToken };
@@ -37,7 +37,7 @@ export class AuthService {
    * Update the access token.
    * @param refreshToken The refresh token.
    * @returns The access token.
-   * @throws {UnauthorizedException} If the refresh token is invalid.
+   * @throws {BadRequestException} If the refresh token is invalid.
    */
   async updateAccessToken(refreshToken: string): Promise<string> {
     try {
