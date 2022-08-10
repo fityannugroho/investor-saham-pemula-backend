@@ -8,6 +8,10 @@
   "servers": [
     {
       "url": "http://localhost:3000"
+    },
+    {
+      "description": "Production Server",
+      "url": "https://isp-nasional.herokuapp.com"
     }
   ],
   "externalDocs": {
