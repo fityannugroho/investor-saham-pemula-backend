@@ -55,7 +55,7 @@ export class TokenService {
    * @returns `true` if the refresh token is saved successfully.
    */
   async saveRefreshToken(token: string, id: string): Promise<boolean> {
-    const auth = await this.prisma.authentications.create({
+    const auth = await this.prisma.auth.create({
       data: { id, token },
     });
     return !!auth;
@@ -67,7 +67,7 @@ export class TokenService {
    * @returns The refresh token if found. Otherwise, `null`.
    */
   async getRefreshToken(id: string): Promise<string | null> {
-    const auth = await this.prisma.authentications.findUnique({
+    const auth = await this.prisma.auth.findUnique({
       where: { id },
       select: { token: true },
     });
@@ -85,7 +85,7 @@ export class TokenService {
       secret: jwtConstants.refreshTokenKey,
     });
 
-    const auth = await this.prisma.authentications.findUnique({
+    const auth = await this.prisma.auth.findUnique({
       where: { id: payload.id },
     });
 
@@ -102,7 +102,7 @@ export class TokenService {
    * @returns `true` if the refresh token is deleted successfully.
    */
   async deleteRefreshToken(id: string): Promise<boolean> {
-    const auth = await this.prisma.authentications.delete({ where: { id } });
+    const auth = await this.prisma.auth.delete({ where: { id } });
     return !!auth;
   }
 }
