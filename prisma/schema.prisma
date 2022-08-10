@@ -40,10 +40,3 @@ model Article {
 
   @@map("articles")
 }
-
-model Event {
-  id String @id @db.VarChar(16)
-  startedAt DateTime @db.Timestamp @map("started_at")
-
-  @@map("events")
-}
