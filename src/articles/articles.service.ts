@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Article } from '@prisma/client';
 import { nanoid } from 'nanoid';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateArticlePayload } from './dto/create-article.payload';
+import { CreateArticleDataType } from './dto/create-article-data.type';
 import { UpdateArticleDataType } from './dto/update-article-data.type';
 
 @Injectable()
@@ -14,15 +14,10 @@ export class ArticlesService {
    * @param data The article data that contains: `authorId`, `title`, `content`.
    * @returns The article id.
    */
-  async createArticle({
-    title,
-    content,
-    writer,
-    photo,
-  }: CreateArticlePayload): Promise<string> {
+  async createArticle(data: CreateArticleDataType): Promise<string> {
     const id = nanoid(16);
     const result = await this.prisma.article.create({
-      data: { id, title, content, writer, photo },
+      data: { id, ...data },
       select: { id: true },
     });
 
