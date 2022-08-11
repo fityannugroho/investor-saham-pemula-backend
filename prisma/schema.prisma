@@ -30,6 +30,14 @@ model Auth {
   @@map("authentications")
 }
 
+model Category {
+  id String @id @db.VarChar(16)
+  name String @db.VarChar(255)
+  articles Article[]
+
+  @@map("categories")
+}
+
 model Article {
   id String @id @db.VarChar(16)
   title String @db.VarChar(255)
@@ -38,6 +46,8 @@ model Article {
   photo String? @db.VarChar(255)
   createdAt DateTime @db.Timestamp @default(now()) @map("created_at")
   updatedAt DateTime @db.Timestamp @default(now()) @updatedAt @map("updated_at")
+  categoryId String? @db.VarChar(16) @map("category_id")
+  category Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   adminId String? @db.VarChar(16) @map("admin_id")
   admin Admin? @relation(fields: [adminId], references: [id], onDelete: SetNull)
 
