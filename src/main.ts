@@ -18,7 +18,12 @@ async function bootstrap() {
   app.enableCors();
 
   // Validate all endpoints
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
 
   // Render the API documentation
   const swaggerDoc = JSON.parse(fs.readFileSync('api.json').toString());
