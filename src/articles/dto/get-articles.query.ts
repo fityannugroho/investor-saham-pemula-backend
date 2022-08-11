@@ -10,4 +10,9 @@ export class GetArticlesQuery {
   @IsOptional()
   @EqualsAny(['date', 'title'])
   sortBy?: 'date' | 'title';
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(16)
+  categoryId?: string;
 }

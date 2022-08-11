@@ -565,6 +565,24 @@
               "type": "string"
             },
             "example": "date"
+          },
+          {
+            "name": "categoryId",
+            "in": "query",
+            "description": "Get articles from specific category. `categoryId` must match the **Nano ID** format or **leave it empty**.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "examples": {
+              "Get articles in a category": {
+                "value": "Ta2bl7-H6zSnKhEY"
+              },
+              "Get articles which don't have category": {
+                "value": ""
+              }
+            }
           }
         ],
         "responses": {

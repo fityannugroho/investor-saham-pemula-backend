@@ -8,6 +8,7 @@ import { nanoid } from 'nanoid';
 import { CategoriesService } from 'src/categories/categories.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateArticleDataType } from './dto/create-article-data.type';
+import { GetArticlesType } from './dto/get-articles.type';
 import { UpdateArticleDataType } from './dto/update-article-data.type';
 
 @Injectable()
@@ -52,12 +53,19 @@ export class ArticlesService {
 
   /**
    * Get articles, optionally filtered by title and sorted by `date` or `title`. Default: `date`.
-   * @param search The search keyword.
+   * @param queries The queries to filter and sort articles.
    * @returns The articles.
    */
-  async getArticles(search?: string, sortBy: 'date' | 'title' = 'date') {
+  async getArticles({ search, sortBy = 'date', categoryId }: GetArticlesType) {
+    if (categoryId) {
+      await this.verifyCategoryId(categoryId);
+    }
+
     return await this.prisma.article.findMany({
-      where: { title: { contains: search } },
+      where: {
+        title: { contains: search },
+        categoryId: categoryId === '' ? null : categoryId,
+      },
       orderBy: sortBy === 'title' ? { title: 'asc' } : { createdAt: 'desc' },
       select: {
         id: true,
@@ -65,6 +73,7 @@ export class ArticlesService {
         content: true,
         photo: true,
         createdAt: true,
+        categoryId: true,
       },
     });
   }

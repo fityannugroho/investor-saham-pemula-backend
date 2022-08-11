@@ -41,8 +41,7 @@ export class ArticlesController {
 
   @Get()
   async getArticles(@Query() queries: GetArticlesQuery) {
-    const { search, sortBy } = queries;
-    return await this.articlesService.getArticles(search, sortBy);
+    return await this.articlesService.getArticles(queries);
   }
 
   @Get('/:id')
