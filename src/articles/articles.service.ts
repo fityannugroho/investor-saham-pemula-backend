@@ -95,6 +95,10 @@ export class ArticlesService {
     data: UpdateArticleDataType,
   ): Promise<Article> {
     await this.getArticle(id);
+    if (data.categoryId) {
+      await this.verifyCategoryId(data.categoryId);
+    }
+
     return await this.prisma.article.update({
       where: { id },
       data,

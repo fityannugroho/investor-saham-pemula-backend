@@ -675,7 +675,8 @@
                   "photo": "<photo url>",
                   "createdAt": "2020-02-01T01:12:21",
                   "updatedAt": "2020-02-01T01:12:21",
-                  "adminId": "Ta2bl7-H6zSnKhEY"
+                  "adminId": "Ta2bl7-H6zSnKhEY",
+                  "categoryId": "Ta2bl7-H6zSnKhEY"
                 }
               }
             }
@@ -746,6 +747,11 @@
                   "photo": {
                     "type": "string",
                     "maxLength": 255
+                  },
+                  "categoryId": {
+                    "type": "string",
+                    "minLength": 16,
+                    "maxLength": 16
                   }
                 }
               },
@@ -803,7 +809,8 @@
                     "photo": "<photo url>",
                     "createdAt": "2020-02-01T01:12:21",
                     "updatedAt": "2020-02-01T01:12:21",
-                    "adminId": "Ta2bl7-H6zSnKhEY"
+                    "adminId": "Ta2bl7-H6zSnKhEY",
+                    "categoryId": "Ta2bl7-H6zSnKhEY"
                   }
                 }
               }
