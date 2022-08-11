@@ -900,6 +900,60 @@
         }
       }
     },
+    "/categories": {
+      "get": {
+        "summary": "Get Categories",
+        "description": "Get all categories.",
+        "tags": [
+          "Category"
+        ],
+        "security": [],
+        "parameters": [
+          {
+            "name": "sortBy",
+            "description": "Sort the categories by `id` or `name`. Default: `id`.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id"
+            },
+            "example": "name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**. If categories are found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetCategory"
+                  }
+                },
+                "example": [
+                  {
+                    "id": "Ta2bl7-H6zSnKhEY",
+                    "name": "Events"
+                  },
+                  {
+                    "id": "Ta2bl7-H6zSnKhEY",
+                    "name": "Stocks"
+                  }
+                ]
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
     "/members": {
       "post": {
         "summary": "Register Member",
@@ -1794,6 +1848,24 @@
           "createdAt",
           "updatedAt",
           "adminId"
+        ]
+      },
+      "GetCategory": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 16
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          }
+        },
+        "required": [
+          "id",
+          "name"
         ]
       }
     },
