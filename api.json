@@ -22,6 +22,7 @@
         "tags": [
           "Auth"
         ],
+        "security": [],
         "requestBody": {
           "content": {
             "application/json": {
@@ -538,6 +539,7 @@
         "tags": [
           "Article"
         ],
+        "security": [],
         "parameters": [
           {
             "name": "search",
@@ -637,6 +639,7 @@
         "tags": [
           "Article"
         ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
