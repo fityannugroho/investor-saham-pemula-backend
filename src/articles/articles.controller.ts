@@ -55,11 +55,13 @@ export class ArticlesController {
   async updateArticle(
     @Param() params: GetArticleParam,
     @Body() payload: UpdateArticlePayload,
+    @Bearer('id') adminId: string,
   ) {
-    const updatedArticle = await this.articlesService.updateArticle(
-      params.id,
-      payload,
-    );
+    const updatedArticle = await this.articlesService.updateArticle(params.id, {
+      ...payload,
+      adminId,
+    });
+
     return {
       statusCode: 200,
       message: 'Article updated successfully',

@@ -666,7 +666,8 @@
                   "writer": "John Doe",
                   "photo": "<photo url>",
                   "createdAt": "2020-02-01T01:12:21",
-                  "updatedAt": "2020-02-01T01:12:21"
+                  "updatedAt": "2020-02-01T01:12:21",
+                  "adminId": "Ta2bl7-H6zSnKhEY"
                 }
               }
             }
@@ -793,7 +794,8 @@
                     "writer": "John Doe",
                     "photo": "<photo url>",
                     "createdAt": "2020-02-01T01:12:21",
-                    "updatedAt": "2020-02-01T01:12:21"
+                    "updatedAt": "2020-02-01T01:12:21",
+                    "adminId": "Ta2bl7-H6zSnKhEY"
                   }
                 }
               }
@@ -1773,6 +1775,11 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "adminId": {
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 16
           }
         },
         "required": [
@@ -1782,7 +1789,8 @@
           "writer",
           "photo",
           "createdAt",
-          "updatedAt"
+          "updatedAt",
+          "adminId"
         ]
       }
     },
