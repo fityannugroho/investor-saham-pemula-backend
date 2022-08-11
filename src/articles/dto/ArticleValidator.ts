@@ -41,7 +41,11 @@ export class ArticleValidator {
   @IsDateString()
   updatedAt?: Date;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNanoid(16)
   adminId?: string;
+
+  @IsOptional()
+  @IsNanoid(16)
+  categoryId?: string;
 }

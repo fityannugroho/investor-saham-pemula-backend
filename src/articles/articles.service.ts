@@ -1,20 +1,46 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Article } from '@prisma/client';
 import { nanoid } from 'nanoid';
+import { CategoriesService } from 'src/categories/categories.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateArticleDataType } from './dto/create-article-data.type';
 import { UpdateArticleDataType } from './dto/update-article-data.type';
 
 @Injectable()
 export class ArticlesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly categoriesService: CategoriesService,
+  ) {}
+
+  /**
+   * Verify that the category id exists.
+   * @param categoryId The category id.
+   * @throws {BadRequestException} If the category id is not found.
+   */
+  async verifyCategoryId(categoryId: string) {
+    try {
+      await this.categoriesService.getCategory(categoryId);
+    } catch (error) {
+      throw new BadRequestException(['Unknown category id']);
+    }
+  }
 
   /**
    * Create new article.
    * @param data The article data that contains: `authorId`, `title`, `content`.
    * @returns The article id.
+   * @throws {BadRequestException} If the category id is not found.
    */
   async createArticle(data: CreateArticleDataType): Promise<string> {
+    if (data.categoryId) {
+      await this.verifyCategoryId(data.categoryId);
+    }
+
     const id = nanoid(16);
     const result = await this.prisma.article.create({
       data: { id, ...data },

@@ -458,6 +458,11 @@
                   "photo": {
                     "type": "string",
                     "maxLength": 255
+                  },
+                  "categoryId": {
+                    "type": "string",
+                    "minLength": 16,
+                    "maxLength": 16
                   }
                 },
                 "required": [

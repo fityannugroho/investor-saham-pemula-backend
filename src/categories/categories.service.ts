@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Category } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -15,5 +15,19 @@ export class CategoriesService {
     return await this.prisma.category.findMany({
       orderBy: { [sortBy]: 'asc' },
     });
+  }
+
+  /**
+   * Get a category by id.
+   * @param id The category id.
+   * @returns The category.
+   * @throws {NotFoundException} If the category is not found.
+   */
+  async getCategory(id: string): Promise<Category> {
+    const category = await this.prisma.category.findUnique({ where: { id } });
+    if (!category) {
+      throw new NotFoundException('Category not found');
+    }
+    return category;
   }
 }
