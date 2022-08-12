@@ -1,5 +1,3 @@
-import { ArticleValidator } from './ArticleValidator';
-import { UpdateArticlePayload } from './update-article.payload';
+import { CreateArticleDataType } from './create-article-data.type';
 
-export type UpdateArticleDataType = Partial<UpdateArticlePayload> &
-  Pick<ArticleValidator, 'adminId'>;
+export type UpdateArticleDataType = Partial<CreateArticleDataType>;

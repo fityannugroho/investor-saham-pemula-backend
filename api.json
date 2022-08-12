@@ -455,10 +455,6 @@
                     "type": "string",
                     "maxLength": 255
                   },
-                  "photo": {
-                    "type": "string",
-                    "maxLength": 255
-                  },
                   "categoryId": {
                     "type": "string",
                     "minLength": 16,
@@ -759,10 +755,6 @@
                     "type": "string"
                   },
                   "writer": {
-                    "type": "string",
-                    "maxLength": 255
-                  },
-                  "photo": {
                     "type": "string",
                     "maxLength": 255
                   },
