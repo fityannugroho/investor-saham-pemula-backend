@@ -5,6 +5,7 @@ import { AdminsModule } from './admins/admins.module';
 import { ArticlesModule } from './articles/articles.module';
 import { AuthModule } from './auth/auth.module';
 import { CategoriesModule } from './categories/categories.module';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { CategoriesModule } from './categories/categories.module';
     ArticlesModule,
     AuthModule,
     CategoriesModule,
+    FilesModule,
   ],
   controllers: [],
   providers: [],
