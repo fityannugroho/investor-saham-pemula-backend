@@ -1,14 +1,16 @@
 import {
-  Controller,
-  Post,
   Body,
+  Controller,
+  Delete,
   Get,
-  Query,
   Param,
   Patch,
-  Delete,
+  Post,
+  Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
+import { FastifyRequest } from 'fastify';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Bearer } from 'src/common/decorator/bearer.decorator';
 import { ArticlesService } from './articles.service';
@@ -16,6 +18,7 @@ import { CreateArticlePayload } from './dto/create-article.payload';
 import { GetArticleParam } from './dto/get-article.param';
 import { GetArticlesQuery } from './dto/get-articles.query';
 import { UpdateArticlePayload } from './dto/update-article.payload';
+import { UploadPhotoParam } from './dto/upload-photo.param';
 
 @Controller('articles')
 export class ArticlesController {
@@ -65,6 +68,19 @@ export class ArticlesController {
       statusCode: 200,
       message: 'Article updated successfully',
       data: { ...updatedArticle },
+    };
+  }
+
+  @Post('/:id/photo')
+  @UseGuards(JwtAuthGuard)
+  async uploadPhoto(
+    @Param() { id }: UploadPhotoParam,
+    @Req() req: FastifyRequest,
+  ) {
+    await this.articlesService.uploadPhoto(id, req);
+    return {
+      statusCode: 200,
+      message: 'Article photo uploaded successfully',
     };
   }
 

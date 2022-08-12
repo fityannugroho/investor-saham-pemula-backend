@@ -10,13 +10,22 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateArticleDataType } from './dto/create-article-data.type';
 import { GetArticlesType } from './dto/get-articles.type';
 import { UpdateArticleDataType } from './dto/update-article-data.type';
+import { FastifyRequest } from 'fastify';
+import { FilesService } from 'src/files/files.service';
+import { fileConstants } from 'src/files/constant';
 
 @Injectable()
 export class ArticlesService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly categoriesService: CategoriesService,
+    private readonly filesService: FilesService,
   ) {}
+
+  /**
+   * The path to the article photo directory.
+   */
+  protected readonly articlesPhotoDir = `${fileConstants.PUBLIC_PATH}/articles`;
 
   /**
    * Verify that the category id exists.
@@ -112,6 +121,24 @@ export class ArticlesService {
       where: { id },
       data,
     });
+  }
+
+  /**
+   * Upload an article photo.
+   * @param id The article id.
+   * @param req The request that contains the file.
+   * @throws {NotFoundException} If the article is not found.
+   * @throws {BadRequestException} If the request is invalid.
+   */
+  async uploadPhoto(id: string, req: FastifyRequest) {
+    await this.getArticle(id);
+
+    const filePath = await this.filesService.uploadFile(req, {
+      destination: this.articlesPhotoDir,
+      rename: (oldName) => `${id}_${Date.now()}.${oldName.split('.').pop()}`,
+    });
+
+    await this.updateArticle(id, { photo: filePath });
   }
 
   /**
