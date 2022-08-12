@@ -18,6 +18,7 @@ export class FilesService {
    * destination  = 'fileConstants.PUBLIC_PATH'
    * rename       = (oldName) => Date.now() + '_' + oldName
    * ```
+   * @returns The path to the uploaded file.
    * @throws {BadRequestException} If the request is not a multipart request or if the file is not provided.
    */
   async uploadFile(
@@ -26,7 +27,7 @@ export class FilesService {
       destination: fileConstants.PUBLIC_PATH,
       rename: (oldName) => `${Date.now()}_${oldName}`,
     },
-  ) {
+  ): Promise<string> {
     if (!req.isMultipart) {
       throw new BadRequestException('Expected multipart request');
     }
@@ -36,8 +37,14 @@ export class FilesService {
       throw new BadRequestException('Empty file');
     }
 
-    const newFileName = rename(filename);
-    const writeStream = fs.createWriteStream(`${destination}/${newFileName}`);
+    // Check if the destination directory exists. If not, create it.
+    if (!fs.existsSync(destination)) {
+      fs.mkdirSync(destination);
+    }
+
+    const filePath = `${destination}/${rename(filename)}`;
+    const writeStream = fs.createWriteStream(filePath);
     await this.pump(file, writeStream);
+    return filePath;
   }
 }
