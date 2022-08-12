@@ -1,3 +1,4 @@
+import fastifyMultipart from '@fastify/multipart';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
@@ -13,6 +14,9 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(),
   );
+
+  // Register fastifyMultipart plugin
+  app.register(fastifyMultipart);
 
   // Enable CORS
   app.enableCors();
