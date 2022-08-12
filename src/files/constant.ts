@@ -1,4 +1,4 @@
 export const fileConstants = {
-  publicPath: 'storage/public',
-  privatePath: 'storage/private',
+  PUBLIC_PATH: 'storage/public',
+  PRIVATE_PATH: 'storage/private',
 };
