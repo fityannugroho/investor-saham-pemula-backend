@@ -142,6 +142,17 @@ export class ArticlesService {
   }
 
   /**
+   * Get an article photo.
+   * @param id The article id.
+   * @returns The article photo.
+   * @throws {NotFoundException} If the article or the photo is not found.
+   */
+  async getPhoto(id: string) {
+    const { photo } = await this.getArticle(id);
+    return this.filesService.getFile(photo);
+  }
+
+  /**
    * Delete an article.
    * @param id The article id.
    * @throws {NotFoundException} If the article is not found.

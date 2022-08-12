@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { FastifyRequest } from 'fastify';
 import * as fs from 'fs';
 import { pipeline } from 'stream';
@@ -18,6 +22,7 @@ export class FilesService {
    * destination  = 'fileConstants.PUBLIC_PATH'
    * rename       = (oldName) => Date.now() + '_' + oldName
    * ```
+   * See the {@link UploadFileOptions} type for more details.
    * @returns The path to the uploaded file.
    * @throws {BadRequestException} If the request is not a multipart request or if the file is not provided.
    */
@@ -46,5 +51,18 @@ export class FilesService {
     const writeStream = fs.createWriteStream(filePath);
     await this.pump(file, writeStream);
     return filePath;
+  }
+
+  /**
+   * Get a file.
+   * @param filePath The path to the file.
+   * @returns The file's content.
+   * @throws {NotFoundException} If the file is not found.
+   */
+  async getFile(filePath: string): Promise<fs.ReadStream> {
+    if (fs.existsSync(filePath)) {
+      return fs.createReadStream(filePath, { autoClose: true });
+    }
+    throw new NotFoundException('File not found');
   }
 }

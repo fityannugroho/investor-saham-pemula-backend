@@ -18,7 +18,6 @@ import { CreateArticlePayload } from './dto/create-article.payload';
 import { GetArticleParam } from './dto/get-article.param';
 import { GetArticlesQuery } from './dto/get-articles.query';
 import { UpdateArticlePayload } from './dto/update-article.payload';
-import { UploadPhotoParam } from './dto/upload-photo.param';
 
 @Controller('articles')
 export class ArticlesController {
@@ -74,7 +73,7 @@ export class ArticlesController {
   @Post('/:id/photo')
   @UseGuards(JwtAuthGuard)
   async uploadPhoto(
-    @Param() { id }: UploadPhotoParam,
+    @Param() { id }: GetArticleParam,
     @Req() req: FastifyRequest,
   ) {
     await this.articlesService.uploadPhoto(id, req);
@@ -82,6 +81,11 @@ export class ArticlesController {
       statusCode: 200,
       message: 'Article photo uploaded successfully',
     };
+  }
+
+  @Get('/:id/photo')
+  async getPhoto(@Param() { id }: GetArticleParam) {
+    return await this.articlesService.getPhoto(id);
   }
 
   @Delete('/:id')
