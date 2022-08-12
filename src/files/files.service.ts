@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import * as fastify from 'fastify';
+import { FastifyRequest } from 'fastify';
 import * as fs from 'fs';
 import { pipeline } from 'stream';
-import * as util from 'util';
+import { promisify } from 'util';
 import { fileConstants } from './constant';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class FilesService {
    * @param req The request object.
    * @throws {BadRequestException} If the request is not a multipart request.
    */
-  async uploadFile(req: fastify.FastifyRequest) {
+  async uploadFile(req: FastifyRequest) {
     if (!req.isMultipart) {
       throw new BadRequestException('Expected multipart request');
     }
@@ -20,7 +20,7 @@ export class FilesService {
     const multipart = req.multipart(
       async (field, file, filename) => {
         // Upload the file
-        const pump = util.promisify(pipeline);
+        const pump = promisify(pipeline);
         const writeStream = fs.createWriteStream(
           `${fileConstants.publicPath}/${filename}`,
         );
