@@ -57,7 +57,7 @@ export class IsValidHtmlConstraint implements ValidatorConstraintInterface {
       return false;
     }
 
-    const tags = value.match(htmlOpeningTagRegex);
+    const tags = value.match(htmlOpeningTagRegex) ?? [];
     return tags.every((tag) => allowedTags.includes(tag));
   }
 }
