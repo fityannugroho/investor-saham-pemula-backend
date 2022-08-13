@@ -5,6 +5,7 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
+import { IsValidHtml } from 'src/common/decorator/is-valid-html.decorator';
 import { IsNanoid } from 'src/common/decorator/IsNanoid';
 import { IsNotSymbol } from 'src/common/decorator/IsNotSymbol';
 
@@ -20,6 +21,7 @@ export class ArticleValidator {
 
   @IsNotEmpty()
   @IsString()
+  @IsValidHtml()
   content: string;
 
   @IsNotEmpty()
