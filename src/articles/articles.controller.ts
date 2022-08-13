@@ -78,7 +78,7 @@ export class ArticlesController {
   ) {
     await this.articlesService.uploadPhoto(id, req);
     return {
-      statusCode: 200,
+      statusCode: 201,
       message: 'Article photo uploaded successfully',
     };
   }

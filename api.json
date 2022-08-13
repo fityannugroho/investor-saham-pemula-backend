@@ -963,7 +963,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "**OK**. If article photo is uploaded successfully.",
             "content": {
               "application/json": {
@@ -979,7 +979,7 @@
                   }
                 },
                 "example": {
-                  "statusCode": 200,
+                  "statusCode": 201,
                   "message": "Article photo uploaded successfully"
                 }
               }
