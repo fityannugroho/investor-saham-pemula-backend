@@ -69,7 +69,7 @@ export class ArticlesController {
     return {
       statusCode: 200,
       message: 'Article updated successfully',
-      data: { ...updatedArticle },
+      data: { ...parsePhotoUrl(updatedArticle) },
     };
   }
 
