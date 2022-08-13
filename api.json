@@ -134,6 +134,64 @@
           }
         }
       },
+      "get": {
+        "summary": "Get Profile",
+        "description": "Get the profile of the logged user.",
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**. Returns the profile of the logged user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 16,
+                      "maxLength": 16
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "iat": {
+                      "type": "integer"
+                    },
+                    "exp": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "email",
+                    "iat",
+                    "exp"
+                  ]
+                },
+                "example": {
+                  "id": "Ta2bl7-H6zSnKhEY",
+                  "name": "John Doe",
+                  "email": "johndoe@email.com",
+                  "iat": 1588897200,
+                  "exp": 1588897200
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
       "patch": {
         "summary": "Update Token",
         "description": "Update the access token.",

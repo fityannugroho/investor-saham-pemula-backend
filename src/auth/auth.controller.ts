@@ -2,10 +2,12 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { Bearer } from 'src/common/decorator/bearer.decorator';
 import { AuthService } from './auth.service';
 import { LoginPayload } from './dto/login.payload';
 import { LogoutPayload } from './dto/logout.payload';
@@ -25,6 +27,13 @@ export class AuthController {
       message: 'Login successful',
       data: { ...tokens },
     };
+  }
+
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  async getProfile(@Bearer() authPayload: any) {
+    const profile = await this.authService.getAdminProfile(authPayload.id);
+    return { ...profile, ...authPayload };
   }
 
   @Patch()
