@@ -131,12 +131,17 @@ export class ArticlesService {
    * @throws {BadRequestException} If the request is invalid.
    */
   async uploadPhoto(id: string, req: FastifyRequest) {
-    await this.getArticle(id);
+    const { photo: oldPhotoPath } = await this.getArticle(id);
 
     const filePath = await this.filesService.uploadFile(req, {
       destination: this.articlesPhotoDir,
       rename: (oldName) => `${id}_${Date.now()}.${oldName.split('.').pop()}`,
     });
+
+    // Check for old photo
+    if (oldPhotoPath) {
+      await this.filesService.deleteFile(oldPhotoPath);
+    }
 
     await this.updateArticle(id, { photo: filePath });
   }
@@ -153,12 +158,23 @@ export class ArticlesService {
   }
 
   /**
+   * Delete an article photo.
+   * @param id The article id.
+   * @throws {NotFoundException} If the article or the photo is not found.
+   */
+  async deletePhoto(id: string): Promise<void> {
+    const { photo } = await this.getArticle(id);
+    await this.filesService.deleteFile(photo);
+    await this.updateArticle(id, { photo: null });
+  }
+
+  /**
    * Delete an article.
    * @param id The article id.
    * @throws {NotFoundException} If the article is not found.
    */
   async deleteArticle(id: string): Promise<void> {
-    await this.getArticle(id);
+    await this.deletePhoto(id);
     await this.prisma.article.delete({ where: { id } });
   }
 }

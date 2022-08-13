@@ -88,6 +88,16 @@ export class ArticlesController {
     return await this.articlesService.getPhoto(id);
   }
 
+  @Delete('/:id/photo')
+  @UseGuards(JwtAuthGuard)
+  async deletePhoto(@Param() { id }: GetArticleParam) {
+    await this.articlesService.deletePhoto(id);
+    return {
+      statusCode: 200,
+      message: 'Article photo deleted successfully',
+    };
+  }
+
   @Delete('/:id')
   @UseGuards(JwtAuthGuard)
   async deleteArticle(@Param() params: GetArticleParam) {
