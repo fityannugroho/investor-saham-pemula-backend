@@ -5,5 +5,5 @@ export class CreateArticlePayload extends PickType(ArticleValidator, [
   'title',
   'content',
   'writer',
-  'photo',
+  'categoryId',
 ] as const) {}

@@ -1,3 +1,4 @@
+import fastifyMultipart from '@fastify/multipart';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
@@ -14,11 +15,19 @@ async function bootstrap() {
     new FastifyAdapter(),
   );
 
+  // Register fastifyMultipart plugin
+  app.register(fastifyMultipart);
+
   // Enable CORS
   app.enableCors();
 
   // Validate all endpoints
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
 
   // Render the API documentation
   const swaggerDoc = JSON.parse(fs.readFileSync('api.json').toString());

@@ -3,7 +3,6 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsUrl,
   MaxLength,
 } from 'class-validator';
 import { IsNanoid } from 'src/common/decorator/IsNanoid';
@@ -30,7 +29,8 @@ export class ArticleValidator {
   writer: string;
 
   @IsOptional()
-  @IsUrl()
+  @IsString()
+  @MaxLength(255)
   photo?: string;
 
   @IsOptional()
@@ -41,7 +41,11 @@ export class ArticleValidator {
   @IsDateString()
   updatedAt?: Date;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNanoid(16)
   adminId?: string;
+
+  @IsOptional()
+  @IsNanoid(16)
+  categoryId?: string;
 }

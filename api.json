@@ -459,9 +459,10 @@
                     "type": "string",
                     "maxLength": 255
                   },
-                  "photo": {
+                  "categoryId": {
                     "type": "string",
-                    "maxLength": 255
+                    "minLength": 16,
+                    "maxLength": 16
                   }
                 },
                 "required": [
@@ -564,6 +565,24 @@
               "type": "string"
             },
             "example": "date"
+          },
+          {
+            "name": "categoryId",
+            "in": "query",
+            "description": "Get articles from specific category. `categoryId` must match the **Nano ID** format or **leave it empty**.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "examples": {
+              "Get articles in a category": {
+                "value": "Ta2bl7-H6zSnKhEY"
+              },
+              "Get articles which don't have category": {
+                "value": ""
+              }
+            }
           }
         ],
         "responses": {
@@ -674,7 +693,8 @@
                   "photo": "<photo url>",
                   "createdAt": "2020-02-01T01:12:21",
                   "updatedAt": "2020-02-01T01:12:21",
-                  "adminId": "Ta2bl7-H6zSnKhEY"
+                  "adminId": "Ta2bl7-H6zSnKhEY",
+                  "categoryId": "Ta2bl7-H6zSnKhEY"
                 }
               }
             }
@@ -742,9 +762,10 @@
                     "type": "string",
                     "maxLength": 255
                   },
-                  "photo": {
+                  "categoryId": {
                     "type": "string",
-                    "maxLength": 255
+                    "minLength": 16,
+                    "maxLength": 16
                   }
                 }
               },
@@ -802,7 +823,8 @@
                     "photo": "<photo url>",
                     "createdAt": "2020-02-01T01:12:21",
                     "updatedAt": "2020-02-01T01:12:21",
-                    "adminId": "Ta2bl7-H6zSnKhEY"
+                    "adminId": "Ta2bl7-H6zSnKhEY",
+                    "categoryId": "Ta2bl7-H6zSnKhEY"
                   }
                 }
               }
@@ -897,6 +919,277 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/articles/{id}/photo": {
+      "post": {
+        "summary": "Upload Article Photo",
+        "description": "Upload an article photo by its id.",
+        "tags": [
+          "Article"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The article id which must match the **Nano ID** format.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 16
+            },
+            "example": "Ta2bl7-H6zSnKhEY"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "photo": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "photo"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "**OK**. If article photo is uploaded successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "statusCode": 201,
+                  "message": "Article photo uploaded successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "description": "**Not Found**. If article is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Article not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get Article Photo",
+        "description": "Get an article photo by its id.",
+        "tags": [
+          "Article"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The article id which must match the **Nano ID** format.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 16
+            },
+            "example": "Ta2bl7-H6zSnKhEY"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**. If article photo is found successfully.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "description": "**Not Found**. If article is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Article not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Article Photo",
+        "description": "Delete an article photo by its id.",
+        "tags": [
+          "Article"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The article id which must match the **Nano ID** format.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 16
+            },
+            "example": "Ta2bl7-H6zSnKhEY"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**. If article photo is deleted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "statusCode": 200,
+                  "message": "Article photo deleted successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "description": "**Not Found**. If article is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Article not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/categories": {
+      "get": {
+        "summary": "Get Categories",
+        "description": "Get all categories.",
+        "tags": [
+          "Category"
+        ],
+        "security": [],
+        "parameters": [
+          {
+            "name": "sortBy",
+            "description": "Sort the categories by `id` or `name`. Default: `id`.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id"
+            },
+            "example": "name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**. If categories are found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetCategory"
+                  }
+                },
+                "example": [
+                  {
+                    "id": "Ta2bl7-H6zSnKhEY",
+                    "name": "Events"
+                  },
+                  {
+                    "id": "Ta2bl7-H6zSnKhEY",
+                    "name": "Stocks"
+                  }
+                ]
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
           },
           "500": {
             "$ref": "#/components/responses/InternalServerError"
@@ -1798,6 +2091,24 @@
           "createdAt",
           "updatedAt",
           "adminId"
+        ]
+      },
+      "GetCategory": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 16
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          }
+        },
+        "required": [
+          "id",
+          "name"
         ]
       }
     },

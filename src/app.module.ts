@@ -4,6 +4,8 @@ import { PassportModule } from '@nestjs/passport';
 import { AdminsModule } from './admins/admins.module';
 import { ArticlesModule } from './articles/articles.module';
 import { AuthModule } from './auth/auth.module';
+import { CategoriesModule } from './categories/categories.module';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { AuthModule } from './auth/auth.module';
     AdminsModule,
     ArticlesModule,
     AuthModule,
+    CategoriesModule,
+    FilesModule,
   ],
   controllers: [],
   providers: [],
