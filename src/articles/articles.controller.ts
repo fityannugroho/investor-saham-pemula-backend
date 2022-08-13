@@ -18,6 +18,7 @@ import { CreateArticlePayload } from './dto/create-article.payload';
 import { GetArticleParam } from './dto/get-article.param';
 import { GetArticlesQuery } from './dto/get-articles.query';
 import { UpdateArticlePayload } from './dto/update-article.payload';
+import { parsePhotoUrl } from './utils/parse-photo-url';
 
 @Controller('articles')
 export class ArticlesController {
@@ -43,12 +44,14 @@ export class ArticlesController {
 
   @Get()
   async getArticles(@Query() queries: GetArticlesQuery) {
-    return await this.articlesService.getArticles(queries);
+    const articles = await this.articlesService.getArticles(queries);
+    return articles.map(parsePhotoUrl);
   }
 
   @Get('/:id')
   async getArticle(@Param() params: GetArticleParam) {
-    return await this.articlesService.getArticle(params.id);
+    const article = await this.articlesService.getArticle(params.id);
+    return parsePhotoUrl(article);
   }
 
   @Patch('/:id')
