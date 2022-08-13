@@ -34,6 +34,16 @@ export class AuthService {
   }
 
   /**
+   * Get the admin profile.
+   * @param id The access token.
+   * @returns The admin.
+   * @throws {NotFoundException} If the admin is not found.
+   */
+  async getAdminProfile(id: string) {
+    return await this.adminsService.getAdminById(id);
+  }
+
+  /**
    * Update the access token.
    * @param refreshToken The refresh token.
    * @returns The access token.
