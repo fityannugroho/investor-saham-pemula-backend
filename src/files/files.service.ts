@@ -65,4 +65,14 @@ export class FilesService {
     }
     throw new NotFoundException('File not found');
   }
+
+  /**
+   * Delete a file.
+   * @param filePath The path to the file.
+   */
+  async deleteFile(filePath: string): Promise<void> {
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+  }
 }
