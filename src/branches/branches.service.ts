@@ -42,4 +42,12 @@ export class BranchesService {
     });
     return branch.id;
   }
+
+  /**
+   * Get branches.
+   * @returns The branches.
+   */
+  async getBranches() {
+    return this.prisma.branch.findMany();
+  }
 }

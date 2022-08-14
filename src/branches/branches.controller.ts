@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { BranchesService } from './branches.service';
 import { AddBranchPayload } from './dto/add-branch.payload';
 
@@ -14,5 +14,10 @@ export class BranchesController {
       message: 'Branch registered successfully',
       data: { branchId },
     };
+  }
+
+  @Get()
+  async getBranches() {
+    return await this.branchesService.getBranches();
   }
 }
