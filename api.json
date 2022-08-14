@@ -1256,6 +1256,7 @@
         "tags": [
           "Member"
         ],
+        "security": [],
         "requestBody": {
           "content": {
             "application/json": {
