@@ -37,7 +37,6 @@ export class AuthController {
   }
 
   @Patch()
-  @UseGuards(JwtAuthGuard)
   async updateToken(@Body() payload: UpdateTokenPayload) {
     const accessToken = await this.authService.updateAccessToken(
       payload.refreshToken,
