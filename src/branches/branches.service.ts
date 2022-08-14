@@ -27,13 +27,25 @@ export class BranchesService {
   }
 
   /**
+   * Verify if the registrant id is exist.
+   * @param registrantId The registrant id.
+   */
+  async verifyRegistrantId(registrantId: string): Promise<void> {
+    try {
+      await this.registrantsService.getRegistrant(registrantId);
+    } catch (error) {
+      throw new BadRequestException(['Unknown registrant id']);
+    }
+  }
+
+  /**
    * Add new branch.
    * @param data The branch data.
    * @returns The branch id.
    */
   async addBranch(data: AddBranchDataType): Promise<string> {
     await this.verifyBranchEmail(data.email);
-    // TODO: Validate the `registrantId` field.
+    await this.verifyRegistrantId(data.registrantId);
 
     const id = nanoid(16);
     const branch = await this.prisma.branch.create({

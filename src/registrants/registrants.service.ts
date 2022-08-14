@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Registrant } from '@prisma/client';
 import { nanoid } from 'nanoid';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AddRegistrantDataType } from './dto/add-registrant-data.type';
@@ -18,5 +19,21 @@ export class RegistrantsService {
       data: { id, idCard: '', ...data },
     });
     return registrant.id;
+  }
+
+  /**
+   * Get a registrant.
+   * @param id The registrant id.
+   * @returns The registrant.
+   * @throws {NotFoundException} If the registrant is not found.
+   */
+  async getRegistrant(id: string): Promise<Registrant> {
+    const registrant = await this.prisma.registrant.findUnique({
+      where: { id },
+    });
+    if (!registrant) {
+      throw new NotFoundException('Registrant not found');
+    }
+    return registrant;
   }
 }
