@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Article } from '@prisma/client';
+import { Article, Category } from '@prisma/client';
 import { nanoid } from 'nanoid';
 import { CategoriesService } from 'src/categories/categories.service';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -93,8 +93,11 @@ export class ArticlesService {
    * @returns The article.
    * @throws {NotFoundException} If the article is not found.
    */
-  async getArticle(id: string): Promise<Article> {
-    const article = await this.prisma.article.findUnique({ where: { id } });
+  async getArticle(id: string): Promise<Article & { category: Category }> {
+    const article = await this.prisma.article.findUnique({
+      where: { id },
+      include: { category: true },
+    });
     if (!article) {
       throw new NotFoundException('Article not found');
     }
