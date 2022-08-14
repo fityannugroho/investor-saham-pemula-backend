@@ -1553,6 +1553,15 @@
                       "type": "string",
                       "format": "date-time"
                     },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "adminId": {
+                      "type": "string",
+                      "maxLength": 16,
+                      "minLength": 16
+                    },
                     "acceptedAt": {
                       "type": "string",
                       "format": "date-time"
@@ -1567,6 +1576,8 @@
                     "address",
                     "socialMedia",
                     "createdAt",
+                    "updatedAt",
+                    "adminId",
                     "acceptedAt"
                   ]
                 },
@@ -1579,6 +1590,8 @@
                   "address": "California, USA",
                   "socialMedia": "@johndoe",
                   "createdAt": "2020-02-01T01:12:21",
+                  "updatedAt": "2020-02-01T01:12:21",
+                  "adminId": "Ta2bl7-H6zSnKhEY",
                   "acceptedAt": "2020-02-01T01:12:21"
                 }
               }

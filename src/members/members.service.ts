@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { nanoid } from 'nanoid';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AddMemberDataType } from './dto/add-member-data.type';
@@ -57,5 +61,23 @@ export class MembersService {
       ...member,
       isAccepted: !!acceptedAt,
     }));
+  }
+
+  /**
+   * Get member by id.
+   * @param id The member id.
+   * @returns The member.
+   * @throws {NotFoundException} If the member does not exist.
+   */
+  async getMember(id: string) {
+    const member = await this.prisma.member.findUnique({
+      where: { id },
+    });
+
+    if (!member) {
+      throw new NotFoundException('Member not found');
+    }
+
+    return member;
   }
 }
