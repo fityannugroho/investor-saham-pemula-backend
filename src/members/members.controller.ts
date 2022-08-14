@@ -1,4 +1,5 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RegisterMemberPayload } from './dto/register-member.payload';
 import { MembersService } from './members.service';
 
@@ -14,5 +15,11 @@ export class MembersController {
       message: 'Member registered successfully',
       data: { memberId },
     };
+  }
+
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  async getMembers() {
+    return await this.membersService.getMembers();
   }
 }
