@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { nanoid } from 'nanoid';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { RegistrantsService } from 'src/registrants/registrants.service';
@@ -61,5 +65,22 @@ export class BranchesService {
    */
   async getBranches() {
     return this.prisma.branch.findMany();
+  }
+
+  /**
+   * Get a branch.
+   * @param id The branch id.
+   * @returns The branch including the registrant.
+   * @throws {NotFoundException} If the branch is not found.
+   */
+  async getBranch(id: string) {
+    const branch = await this.prisma.branch.findUnique({
+      where: { id },
+      include: { registrant: true },
+    });
+    if (!branch) {
+      throw new NotFoundException('Branch not found');
+    }
+    return branch;
   }
 }

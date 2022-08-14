@@ -1,6 +1,8 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { BranchesService } from './branches.service';
 import { AddBranchPayload } from './dto/add-branch.payload';
+import { GetBranchParam } from './dto/get-branch.param';
 
 @Controller('branches')
 export class BranchesController {
@@ -17,7 +19,14 @@ export class BranchesController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   async getBranches() {
     return await this.branchesService.getBranches();
+  }
+
+  @Get('/:id')
+  @UseGuards(JwtAuthGuard)
+  async getBranch(@Param() { id }: GetBranchParam) {
+    return await this.branchesService.getBranch(id);
   }
 }
