@@ -32,7 +32,7 @@ export class MemberValidator {
   gender: 'male' | 'female';
 
   @IsNotEmpty()
-  @IsNumber()
+  @IsNumber({ maxDecimalPlaces: 0, allowNaN: false })
   age: number;
 
   @IsNotEmpty()
