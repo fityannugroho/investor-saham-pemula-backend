@@ -80,4 +80,16 @@ export class MembersService {
 
     return member;
   }
+
+  /**
+   * Delete member by id.
+   * @param id The member id.
+   * @throws {NotFoundException} If the member does not exist.
+   */
+  async deleteMember(id: string) {
+    await this.getMember(id);
+    await this.prisma.member.delete({
+      where: { id },
+    });
+  }
 }
