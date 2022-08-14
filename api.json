@@ -1249,6 +1249,69 @@
         }
       }
     },
+    "/categories/{id}": {
+      "get": {
+        "summary": "Get Category",
+        "description": "Get a category by its id.",
+        "tags": [
+          "Category"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The category id which must match the **Nano ID** format.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 16
+            },
+            "example": "Ta2bl7-H6zSnKhEY"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**. If category is found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCategory"
+                },
+                "example": {
+                  "id": "Ta2bl7-H6zSnKhEY",
+                  "name": "Events"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "description": "**Not Found**. If category is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Category not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
     "/members": {
       "post": {
         "summary": "Register Member",
