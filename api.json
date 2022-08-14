@@ -1703,20 +1703,11 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "applicantName": {
+                  "location": {
                     "type": "string",
                     "maxLength": 255
                   },
-                  "applicantEmail": {
-                    "type": "string",
-                    "format": "email",
-                    "maxLength": 320
-                  },
-                  "branchLocation": {
-                    "type": "string",
-                    "maxLength": 255
-                  },
-                  "branchEmail": {
+                  "email": {
                     "type": "string",
                     "format": "email",
                     "maxLength": 320
@@ -1725,31 +1716,23 @@
                     "type": "string",
                     "maxLength": 255
                   },
-                  "cv": {
-                    "type": "string"
-                  },
-                  "idCard": {
-                    "type": "string"
+                  "registrantId": {
+                    "type": "string",
+                    "maxLength": 16,
+                    "minLength": 16
                   }
                 },
                 "required": [
-                  "applicantName",
-                  "applicantEmail",
-                  "branchLocation",
-                  "branchEmail",
-                  "socialMedia",
-                  "cv",
-                  "idCard"
+                  "location",
+                  "email",
+                  "socialMedia"
                 ]
               },
               "example": {
-                "applicantName": "John Doe",
-                "applicantEmail": "johndoe@email.com",
-                "branchLocation": "Jakarta",
-                "branchEmail": "ispjakarta@email.com",
+                "location": "Jakarta",
+                "email": "ispjakarta@email.com",
                 "socialMedia": "@ispjakarta",
-                "cv": "<cv file>",
-                "idCard": "<id card file>"
+                "registrantId": "Ta2bl7-H6zSnKhEY"
               }
             }
           }

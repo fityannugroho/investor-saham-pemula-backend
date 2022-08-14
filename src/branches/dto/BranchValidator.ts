@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 import { IsNanoid } from 'src/common/decorator/IsNanoid';
 
-export class branchValidator {
+export class BranchValidator {
   @IsNotEmpty()
   @IsNanoid(16)
   id: string;
