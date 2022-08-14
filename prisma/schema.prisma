@@ -19,6 +19,7 @@ model Admin {
   auth Auth?
   articles Article[]
   members Member[]
+  branches Branch[]
 
   @@map("admins")
 }
@@ -70,4 +71,31 @@ model Member {
   acceptedAt DateTime? @db.Timestamp @map("accepted_at")
 
   @@map("members")
+}
+
+model Registrant {
+  id String @id @db.VarChar(16)
+  name String @db.VarChar(255)
+  email String @db.VarChar(320) @unique
+  idCard String @db.VarChar(255) @map("id_card")
+  cv String? @db.VarChar(255)
+  branch Branch?
+
+  @@map("registrants")
+}
+
+model Branch {
+  id String @id @db.VarChar(16)
+  location String @db.VarChar(255)
+  email String @db.VarChar(320) @unique
+  socialMedia String @db.VarChar(255) @map("social_media")
+  createdAt DateTime @db.Timestamp @default(now()) @map("created_at")
+  updatedAt DateTime @db.Timestamp @default(now()) @updatedAt @map("updated_at")
+  registrantId String? @db.VarChar(16) @unique @map("registrant_id")
+  registrant Registrant? @relation(fields: [registrantId], references: [id], onDelete: SetNull)
+  adminId String? @db.VarChar(16) @map("admin_id")
+  admin Admin? @relation(fields: [adminId], references: [id], onDelete: SetNull)
+  acceptedAt DateTime? @db.Timestamp @map("accepted_at")
+
+  @@map("branches")
 }
