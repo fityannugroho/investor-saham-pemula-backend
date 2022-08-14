@@ -1690,6 +1690,85 @@
         }
       }
     },
+    "/registrants": {
+      "post": {
+        "summary": "Add Registrant",
+        "description": "Add a new registrant.",
+        "tags": [
+          "Registrant"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 320
+                  }
+                }
+              },
+              "example": {
+                "name": "John Doe",
+                "email": "johndoe@email.com"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "**OK**. If registrant is added successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "registrantId": {
+                          "type": "string",
+                          "maxLength": 16,
+                          "minLength": 16
+                        }
+                      },
+                      "required": [
+                        "registrantId"
+                      ]
+                    }
+                  }
+                },
+                "example": {
+                  "statusCode": 200,
+                  "message": "Registrant added successfully",
+                  "data": {
+                    "registrantId": "Ta2bl7-H6zSnKhEY"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
     "/branches": {
       "post": {
         "summary": "Register Branch",
