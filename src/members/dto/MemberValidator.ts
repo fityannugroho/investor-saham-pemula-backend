@@ -2,7 +2,7 @@ import {
   IsDateString,
   IsEmail,
   IsNotEmpty,
-  IsNumberString,
+  IsNumber,
   IsOptional,
   IsString,
   MaxLength,
@@ -32,7 +32,7 @@ export class MemberValidator {
   gender: 'male' | 'female';
 
   @IsNotEmpty()
-  @IsNumberString()
+  @IsNumber()
   age: number;
 
   @IsNotEmpty()
