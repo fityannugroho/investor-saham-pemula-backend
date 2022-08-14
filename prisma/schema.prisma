@@ -18,6 +18,7 @@ model Admin {
   password String @db.Text
   auth Auth?
   articles Article[]
+  members Member[]
 
   @@map("admins")
 }
@@ -52,4 +53,21 @@ model Article {
   admin Admin? @relation(fields: [adminId], references: [id], onDelete: SetNull)
 
   @@map("articles")
+}
+
+model Member {
+  id String @id @db.VarChar(16)
+  name String @db.VarChar(255)
+  email String @unique @db.VarChar(320)
+  gender String @db.VarChar(50)
+  age Int @db.Int
+  address String @db.Text
+  socialMedia String @db.Text @map("social_media")
+  createdAt DateTime @db.Timestamp @default(now()) @map("created_at")
+  updatedAt DateTime @db.Timestamp @default(now()) @updatedAt @map("updated_at")
+  adminId String? @db.VarChar(16) @map("admin_id")
+  admin Admin? @relation(fields: [adminId], references: [id], onDelete: SetNull)
+  acceptedAt DateTime? @db.Timestamp @map("accepted_at")
+
+  @@map("members")
 }
