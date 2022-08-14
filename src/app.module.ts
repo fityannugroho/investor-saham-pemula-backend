@@ -8,6 +8,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { FilesModule } from './files/files.module';
 import { MembersModule } from './members/members.module';
 import { BranchesModule } from './branches/branches.module';
+import { RegistrantsModule } from './registrants/registrants.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { BranchesModule } from './branches/branches.module';
     FilesModule,
     MembersModule,
     BranchesModule,
+    RegistrantsModule,
   ],
   controllers: [],
   providers: [],
