@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { CategoriesModule } from './categories/categories.module';
 import { FilesModule } from './files/files.module';
 import { MembersModule } from './members/members.module';
+import { BranchesModule } from './branches/branches.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { MembersModule } from './members/members.module';
     CategoriesModule,
     FilesModule,
     MembersModule,
+    BranchesModule,
   ],
   controllers: [],
   providers: [],
