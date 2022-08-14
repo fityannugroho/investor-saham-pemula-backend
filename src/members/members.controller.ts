@@ -1,5 +1,14 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { GetMemberParam } from './dto/get-member.param';
 import { RegisterMemberPayload } from './dto/register-member.payload';
 import { MembersService } from './members.service';
 
@@ -21,5 +30,21 @@ export class MembersController {
   @UseGuards(JwtAuthGuard)
   async getMembers() {
     return await this.membersService.getMembers();
+  }
+
+  @Get('/:id')
+  @UseGuards(JwtAuthGuard)
+  async getMember(@Param() { id }: GetMemberParam) {
+    return await this.membersService.getMember(id);
+  }
+
+  @Delete('/:id')
+  @UseGuards(JwtAuthGuard)
+  async deleteMember(@Param() { id }: GetMemberParam) {
+    await this.membersService.deleteMember(id);
+    return {
+      statusCode: 200,
+      message: 'Member deleted successfully',
+    };
   }
 }
