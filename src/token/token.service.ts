@@ -33,7 +33,7 @@ export class TokenService {
   async createAccessToken(payload: any): Promise<string> {
     return await this.jwt.signAsync(payload, {
       secret: jwtConstants.accessTokenKey,
-      expiresIn: '60s',
+      expiresIn: jwtConstants.accessTokenAge,
     });
   }
 
