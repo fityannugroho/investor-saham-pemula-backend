@@ -1974,6 +1974,130 @@
           }
         }
       },
+      "patch": {
+        "summary": "Update Branch",
+        "description": "Update a branch by its id.",
+        "tags": [
+          "Branch"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The branch id which must match the **Nano ID** format.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 16,
+              "minLength": 16
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "location": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 320
+                  },
+                  "socialMedia": {
+                    "type": "string",
+                    "maxLength": 255
+                  }
+                }
+              },
+              "examples": {
+                "Default": {
+                  "value": {
+                    "location": "Jakarta",
+                    "email": "newispjakarta@email.com",
+                    "socialMedia": "@newispjakarta"
+                  }
+                },
+                "UpdateLocationOnly": {
+                  "summary": "Update Location Only",
+                  "value": {
+                    "location": "Jakarta"
+                  }
+                },
+                "UpdateEmailOnly": {
+                  "summary": "Update Email Only",
+                  "value": {
+                    "email": "newispjakarta@email.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "**OK**. If the branch is updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/GetBranch"
+                    }
+                  }
+                },
+                "example": {
+                  "statusCode": 200,
+                  "message": "Branch updated successfully",
+                  "data": {
+                    "id": "Ta2bl7-H6zSnKhEY",
+                    "location": "Jakarta",
+                    "email": "newispjakarta@email.com",
+                    "socialMedia": "@newispjakarta",
+                    "createdAt": "2022-08-14T14:24:31.000Z",
+                    "updatedAt": "2022-08-14T14:24:31.000Z",
+                    "registrantId": "Ta2bl7-H6zSnKhEY",
+                    "adminId": null,
+                    "acceptedAt": null
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "description": "**Not Found**. If the branch is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Branch not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
       "delete": {
         "summary": "Delete Branch",
         "description": "Delete a branch by its id.",

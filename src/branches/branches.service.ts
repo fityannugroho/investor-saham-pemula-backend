@@ -7,6 +7,7 @@ import { nanoid } from 'nanoid';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { RegistrantsService } from 'src/registrants/registrants.service';
 import { AddBranchDataType } from './dto/add-branch-data.type';
+import { UpdateBranchDataType } from './dto/update-branch-data.type';
 
 @Injectable()
 export class BranchesService {
@@ -18,13 +19,20 @@ export class BranchesService {
   /**
    * Verify if the branch email is already registered.
    * @param email The branch email.
+   * @param id Pass the branch id to verify if the email is already registered for the same branch.
    * @throws {BadRequestException} If the branch email already exists.
    */
-  async verifyBranchEmail(email: string): Promise<void> {
+  async verifyBranchEmail(email: string, id?: string): Promise<void> {
     const branch = await this.prisma.branch.findUnique({
       where: { email },
       select: { id: true },
     });
+
+    const isSameBranch = id && branch && id === branch.id;
+    if (isSameBranch) {
+      return;
+    }
+
     if (branch) {
       throw new BadRequestException(['Email already exists']);
     }
@@ -82,6 +90,23 @@ export class BranchesService {
       throw new NotFoundException('Branch not found');
     }
     return branch;
+  }
+
+  /**
+   * Update branch.
+   * @param id The branch id.
+   * @param data The branch data.
+   * @throws {BadRequestException} If the branch email already exists or if the registrant id is not found.
+   * @throws {NotFoundException} If the branch is not found.
+   */
+  async updateBranch(id: string, data: UpdateBranchDataType) {
+    await this.verifyBranchEmail(data.email, id);
+    await this.getBranch(id);
+
+    return await this.prisma.branch.update({
+      where: { id },
+      data,
+    });
   }
 
   /**
