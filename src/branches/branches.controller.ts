@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { BranchesService } from './branches.service';
 import { AddBranchPayload } from './dto/add-branch.payload';
@@ -28,5 +36,15 @@ export class BranchesController {
   @UseGuards(JwtAuthGuard)
   async getBranch(@Param() { id }: GetBranchParam) {
     return await this.branchesService.getBranch(id);
+  }
+
+  @Delete('/:id')
+  @UseGuards(JwtAuthGuard)
+  async deleteBranch(@Param() { id }: GetBranchParam) {
+    await this.branchesService.deleteBranch(id);
+    return {
+      statusCode: 200,
+      message: 'Branch deleted successfully',
+    };
   }
 }

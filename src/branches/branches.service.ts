@@ -83,4 +83,14 @@ export class BranchesService {
     }
     return branch;
   }
+
+  /**
+   * Delete branch.
+   * @param id The branch id.
+   * @throws {NotFoundException} If the branch is not found.
+   */
+  async deleteBranch(id: string): Promise<void> {
+    await this.getBranch(id);
+    await this.prisma.branch.delete({ where: { id } });
+  }
 }
