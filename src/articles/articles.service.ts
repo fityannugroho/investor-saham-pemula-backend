@@ -140,6 +140,7 @@ export class ArticlesService {
       destination: this.articlesPhotoDir,
       rename: (oldName) => `${id}_${Date.now()}.${oldName.split('.').pop()}`,
       allowedMimetypes: fileConstants.IMAGE_MIMETYPES,
+      maxFileSize: 2 * 1024 * 1024,
     });
 
     // Check for old photo

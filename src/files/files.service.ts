@@ -28,19 +28,37 @@ export class FilesService {
    */
   async uploadFile(
     req: FastifyRequest,
-    { destination, rename, allowedMimetypes }: UploadFileOptions = {
+    {
+      destination,
+      rename,
+      allowedMimetypes,
+      maxFileSize,
+    }: UploadFileOptions = {
       destination: fileConstants.PUBLIC_PATH,
       rename: (oldName) => `${Date.now()}_${oldName}`,
       allowedMimetypes: fileConstants.ALLOWED_MIMETYPES,
+      maxFileSize: fileConstants.MAX_FILE_SIZE,
     },
   ): Promise<string> {
     if (!req.isMultipart) {
       throw new BadRequestException('Expected multipart request');
     }
 
-    const { file, filename, mimetype } = await req.file();
+    const { file, filename, mimetype, toBuffer } = await req.file({
+      limits: { fileSize: maxFileSize },
+    });
+
     if (file.readableLength === 0) {
       throw new BadRequestException('Empty file');
+    }
+
+    // Validate the file size
+    try {
+      await toBuffer();
+    } catch (error) {
+      throw new BadRequestException(
+        `File is too large. Max: ${maxFileSize} bytes`,
+      );
     }
 
     // Validate the mimetype

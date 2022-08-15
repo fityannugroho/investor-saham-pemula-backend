@@ -15,4 +15,9 @@ export type UploadFileOptions = {
    * The allowed mimetypes.
    */
   allowedMimetypes?: string[];
+
+  /**
+   * The maximum size of the file in bytes.
+   */
+  maxFileSize?: number;
 };
