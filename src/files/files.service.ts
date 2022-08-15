@@ -28,18 +28,26 @@ export class FilesService {
    */
   async uploadFile(
     req: FastifyRequest,
-    { destination, rename }: UploadFileOptions = {
+    { destination, rename, allowedMimetypes }: UploadFileOptions = {
       destination: fileConstants.PUBLIC_PATH,
       rename: (oldName) => `${Date.now()}_${oldName}`,
+      allowedMimetypes: fileConstants.ALLOWED_MIMETYPES,
     },
   ): Promise<string> {
     if (!req.isMultipart) {
       throw new BadRequestException('Expected multipart request');
     }
 
-    const { file, filename } = await req.file();
+    const { file, filename, mimetype } = await req.file();
     if (file.readableLength === 0) {
       throw new BadRequestException('Empty file');
+    }
+
+    // Validate the mimetype
+    if (!allowedMimetypes.includes(mimetype)) {
+      throw new BadRequestException(
+        `Invalid mimetype! Only ${allowedMimetypes.join(', ')} are allowed`,
+      );
     }
 
     // Check if the destination directory exists. If not, create it.
@@ -50,6 +58,7 @@ export class FilesService {
     const filePath = `${destination}/${rename(filename)}`;
     const writeStream = fs.createWriteStream(filePath);
     await this.pump(file, writeStream);
+
     return filePath;
   }
 

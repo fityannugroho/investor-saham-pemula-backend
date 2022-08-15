@@ -10,4 +10,9 @@ export type UploadFileOptions = {
    * @returns The new name of the file.
    */
   rename?: (oldName: string) => string;
+
+  /**
+   * The allowed mimetypes.
+   */
+  allowedMimetypes?: string[];
 };

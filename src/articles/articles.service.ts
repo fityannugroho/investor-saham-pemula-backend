@@ -139,6 +139,7 @@ export class ArticlesService {
     const filePath = await this.filesService.uploadFile(req, {
       destination: this.articlesPhotoDir,
       rename: (oldName) => `${id}_${Date.now()}.${oldName.split('.').pop()}`,
+      allowedMimetypes: fileConstants.IMAGE_MIMETYPES,
     });
 
     // Check for old photo
