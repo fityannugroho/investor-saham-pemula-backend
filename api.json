@@ -2126,6 +2126,97 @@
           }
         }
       }
+    },
+    "/statistics": {
+      "get": {
+        "summary": "Get Statistics",
+        "description": "Get statistics of data.",
+        "tags": [
+          "Statistics"
+        ],
+        "security": [{}],
+        "responses": {
+          "200": {
+            "description": "**OK**. Returns statistics of data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "article": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer"
+                        },
+                        "categories": {
+                          "type": "object",
+                          "properties": {
+                            "names": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "counts": {
+                              "type": "array",
+                              "items": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "member": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "branch": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "article": {
+                    "total": 10,
+                    "categories": {
+                      "names": [
+                        "Article",
+                        "Event",
+                        "Stock"
+                      ],
+                      "counts": [
+                        1,
+                        2,
+                        3
+                      ]
+                    }
+                  },
+                  "member": {
+                    "total": 10
+                  },
+                  "branch": {
+                    "total": 10
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
     }
   },
   "components": {
