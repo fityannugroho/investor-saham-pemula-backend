@@ -1697,6 +1697,7 @@
         "tags": [
           "Registrant"
         ],
+        "security": [{}],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1880,6 +1881,7 @@
         "tags": [
           "Branch"
         ],
+        "security": [{}],
         "requestBody": {
           "content": {
             "application/json": {
