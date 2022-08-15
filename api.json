@@ -1769,6 +1769,110 @@
         }
       }
     },
+    "/registrants/{id}": {
+      "patch": {
+        "summary": "Update Registrant",
+        "description": "Update a registrant by its id.",
+        "tags": [
+          "Registrant"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The registrant id which must match the **Nano ID** format.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 16,
+              "minLength": 16
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 320
+                  }
+                }
+              },
+              "example": {
+                "name": "John Done",
+                "email": "johndone@email.com"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "**OK**. If registrant is updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/GetRegistrant"
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "statusCode": 200,
+                  "message": "Registrant updated successfully",
+                  "data": {
+                    "id": "Ta2bl7-H6zSnKhEY",
+                    "name": "John Done",
+                    "email": "johndone@email.com"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "description": "**Not Found**. If registrant is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Registrant not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
     "/branches": {
       "post": {
         "summary": "Register Branch",
@@ -2453,6 +2557,11 @@
       "GetRegistrant": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 16
+          },
           "name": {
             "type": "string",
             "maxLength": 255
