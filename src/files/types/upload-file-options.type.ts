@@ -10,4 +10,14 @@ export type UploadFileOptions = {
    * @returns The new name of the file.
    */
   rename?: (oldName: string) => string;
+
+  /**
+   * The allowed mimetypes.
+   */
+  allowedMimetypes?: string[];
+
+  /**
+   * The maximum size of the file in bytes.
+   */
+  maxFileSize?: number;
 };

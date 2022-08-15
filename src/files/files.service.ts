@@ -28,18 +28,44 @@ export class FilesService {
    */
   async uploadFile(
     req: FastifyRequest,
-    { destination, rename }: UploadFileOptions = {
+    {
+      destination,
+      rename,
+      allowedMimetypes,
+      maxFileSize,
+    }: UploadFileOptions = {
       destination: fileConstants.PUBLIC_PATH,
       rename: (oldName) => `${Date.now()}_${oldName}`,
+      allowedMimetypes: fileConstants.ALLOWED_MIMETYPES,
+      maxFileSize: fileConstants.MAX_FILE_SIZE,
     },
   ): Promise<string> {
     if (!req.isMultipart) {
       throw new BadRequestException('Expected multipart request');
     }
 
-    const { file, filename } = await req.file();
+    const { file, filename, mimetype, toBuffer } = await req.file({
+      limits: { fileSize: maxFileSize },
+    });
+
     if (file.readableLength === 0) {
       throw new BadRequestException('Empty file');
+    }
+
+    // Validate the file size
+    try {
+      await toBuffer();
+    } catch (error) {
+      throw new BadRequestException(
+        `File is too large. Max: ${maxFileSize} bytes`,
+      );
+    }
+
+    // Validate the mimetype
+    if (!allowedMimetypes.includes(mimetype)) {
+      throw new BadRequestException(
+        `Invalid mimetype! Only ${allowedMimetypes.join(', ')} are allowed`,
+      );
     }
 
     // Check if the destination directory exists. If not, create it.
@@ -50,6 +76,7 @@ export class FilesService {
     const filePath = `${destination}/${rename(filename)}`;
     const writeStream = fs.createWriteStream(filePath);
     await this.pump(file, writeStream);
+
     return filePath;
   }
 
