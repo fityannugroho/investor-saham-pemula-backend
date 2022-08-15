@@ -15,12 +15,15 @@ export class StatisticsService {
       article: {
         total: await this.prisma.article.count(),
         categories: {
-          names: categories.map((category) => category.name),
-          counts: categories.map(
-            (category) =>
-              articles.filter((article) => article.categoryId === category.id)
-                .length,
-          ),
+          names: ['Article', ...categories.map((category) => category.name)],
+          counts: [
+            await this.prisma.article.count({ where: { categoryId: null } }),
+            ...categories.map(
+              (category) =>
+                articles.filter((article) => article.categoryId === category.id)
+                  .length,
+            ),
+          ],
         },
       },
       member: {
