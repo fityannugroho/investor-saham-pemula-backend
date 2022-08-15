@@ -83,4 +83,14 @@ export class RegistrantsService {
       data,
     });
   }
+
+  /**
+   * Delete a registrant.
+   * @param id The registrant id.
+   * @throws {NotFoundException} If the registrant is not found.
+   */
+  async deleteRegistrant(id: string): Promise<void> {
+    await this.getRegistrant(id);
+    await this.prisma.registrant.delete({ where: { id } });
+  }
 }

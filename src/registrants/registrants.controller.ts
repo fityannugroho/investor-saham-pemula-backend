@@ -1,4 +1,13 @@
-import { Body, Controller, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { AddRegistrantPayload } from './dto/add-registrant.payload';
 import { GetRegistrantParam } from './dto/get-registrant.param';
 import { RegistrantsService } from './registrants.service';
@@ -30,6 +39,16 @@ export class RegistrantsController {
       statusCode: 200,
       message: 'Registrant updated successfully',
       data: updatedRegistrant,
+    };
+  }
+
+  @Delete('/:id')
+  @UseGuards(JwtAuthGuard)
+  async deleteRegistrant(@Param() { id }: GetRegistrantParam) {
+    await this.registrantsService.deleteRegistrant(id);
+    return {
+      statusCode: 200,
+      message: 'Registrant deleted successfully',
     };
   }
 }
