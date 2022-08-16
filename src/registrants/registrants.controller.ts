@@ -5,8 +5,10 @@ import {
   Param,
   Patch,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
+import { FastifyRequest } from 'fastify';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { AddRegistrantPayload } from './dto/add-registrant.payload';
 import { GetRegistrantParam } from './dto/get-registrant.param';
@@ -39,6 +41,18 @@ export class RegistrantsController {
       statusCode: 200,
       message: 'Registrant updated successfully',
       data: updatedRegistrant,
+    };
+  }
+
+  @Post('/:id/idcard')
+  async uploadIdCard(
+    @Param() { id }: GetRegistrantParam,
+    @Req() req: FastifyRequest,
+  ) {
+    await this.registrantsService.uploadIdCard(id, req);
+    return {
+      statusCode: 200,
+      message: 'Id card uploaded successfully',
     };
   }
 

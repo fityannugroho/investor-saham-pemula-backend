@@ -1945,6 +1945,96 @@
         }
       }
     },
+    "/registrants/{id}/idcard": {
+      "post": {
+        "summary": "Upload ID Card",
+        "description": "Upload an registrant ID Card.",
+        "tags": [
+          "Registrant"
+        ],
+        "security": [{}],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The registrant id which must match the **Nano ID** format.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 16
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "idCard": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "idCard"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "**OK**. If the ID card is uploaded successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "statusCode": 201,
+                  "message": "ID card uploaded successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "description": "**Not Found**. If registrant is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Registrant not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
     "/branches": {
       "post": {
         "summary": "Register Branch",
