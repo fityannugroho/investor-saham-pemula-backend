@@ -44,21 +44,12 @@ export class FilesService {
       throw new BadRequestException('Expected multipart request');
     }
 
-    const { file, filename, mimetype, toBuffer } = await req.file({
+    const { file, filename, mimetype } = await req.file({
       limits: { fileSize: maxFileSize },
     });
 
     if (file.readableLength === 0) {
       throw new BadRequestException('Empty file');
-    }
-
-    // Validate the file size
-    try {
-      await toBuffer();
-    } catch (error) {
-      throw new BadRequestException(
-        `File is too large. Max: ${maxFileSize} bytes`,
-      );
     }
 
     // Validate the mimetype
@@ -77,6 +68,15 @@ export class FilesService {
     const writeStream = fs.createWriteStream(filePath);
     await this.pump(file, writeStream);
 
+    // Validate the file size.
+    if (file.truncated) {
+      // Delete the file if it was truncated.
+      await this.deleteFile(filePath);
+      throw new BadRequestException(
+        `File is too large. Max: ${maxFileSize} bytes`,
+      );
+    }
+
     return filePath;
   }
 
@@ -88,7 +88,7 @@ export class FilesService {
    */
   async getFile(filePath: string): Promise<fs.ReadStream> {
     if (fs.existsSync(filePath)) {
-      return fs.createReadStream(filePath, { autoClose: true });
+      return fs.createReadStream(filePath);
     }
     throw new NotFoundException('File not found');
   }

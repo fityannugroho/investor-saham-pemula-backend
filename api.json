@@ -1081,6 +1081,7 @@
         "tags": [
           "Article"
         ],
+        "security": [{}],
         "parameters": [
           {
             "name": "id",
@@ -1264,6 +1265,7 @@
         "tags": [
           "Category"
         ],
+        "security": [{}],
         "parameters": [
           {
             "name": "id",
