@@ -4,14 +4,25 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Registrant } from '@prisma/client';
+import { FastifyRequest } from 'fastify';
 import { nanoid } from 'nanoid';
+import { fileConstants } from 'src/files/constant';
+import { FilesService } from 'src/files/files.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AddRegistrantDataType } from './dto/add-registrant-data.type';
 import { UpdateRegistrantDataType } from './dto/update-registrant-data.type';
 
 @Injectable()
 export class RegistrantsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly filesService: FilesService,
+  ) {}
+
+  /**
+   * The path to the ID card directory.
+   */
+  protected readonly idCardPhotoDir = `${fileConstants.PRIVATE_PATH}/idcard`;
 
   /**
    * Verify if the registrant email is already registered.
@@ -85,12 +96,51 @@ export class RegistrantsService {
   }
 
   /**
+   * Upload an ID card.
+   * @param id The registrant id.
+   * @param req The request.
+   * @throws {NotFoundException} If the registrant is not found.
+   * @throws {BadRequestException} If the request is invalid.
+   */
+  async uploadIdCard(id: string, req: FastifyRequest): Promise<void> {
+    const { idCard: oldIdCardPath } = await this.getRegistrant(id);
+
+    const idCardPath = await this.filesService.uploadFile(req, {
+      destination: this.idCardPhotoDir,
+      rename: (oldName) => `${id}_${Date.now()}.${oldName.split('.').pop()}`,
+      allowedMimetypes: fileConstants.IMAGE_MIMETYPES,
+      maxFileSize: 2 * 1024 * 1024,
+    });
+
+    if (oldIdCardPath) {
+      await this.filesService.deleteFile(oldIdCardPath);
+    }
+
+    await this.prisma.registrant.update({
+      where: { id },
+      data: { idCard: idCardPath },
+    });
+  }
+
+  /**
+   * Get an ID card.
+   * @param id The registrant id.
+   * @returns The ID card.
+   * @throws {NotFoundException} If the registrant or the ID card is not found.
+   */
+  async getIdCard(id: string) {
+    const { idCard } = await this.getRegistrant(id);
+    return await this.filesService.getFile(idCard);
+  }
+
+  /**
    * Delete a registrant.
    * @param id The registrant id.
    * @throws {NotFoundException} If the registrant is not found.
    */
   async deleteRegistrant(id: string): Promise<void> {
-    await this.getRegistrant(id);
+    const { idCard } = await this.getRegistrant(id);
+    await this.filesService.deleteFile(idCard);
     await this.prisma.registrant.delete({ where: { id } });
   }
 }
