@@ -123,6 +123,17 @@ export class RegistrantsService {
   }
 
   /**
+   * Get an ID card.
+   * @param id The registrant id.
+   * @returns The ID card.
+   * @throws {NotFoundException} If the registrant or the ID card is not found.
+   */
+  async getIdCard(id: string) {
+    const { idCard } = await this.getRegistrant(id);
+    return await this.filesService.getFile(idCard);
+  }
+
+  /**
    * Delete a registrant.
    * @param id The registrant id.
    * @throws {NotFoundException} If the registrant is not found.

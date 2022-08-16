@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Patch,
   Post,
@@ -54,6 +55,12 @@ export class RegistrantsController {
       statusCode: 200,
       message: 'Id card uploaded successfully',
     };
+  }
+
+  @Get('/:id/idcard')
+  @UseGuards(JwtAuthGuard)
+  async getIdCard(@Param() { id }: GetRegistrantParam) {
+    return await this.registrantsService.getIdCard(id);
   }
 
   @Delete('/:id')
