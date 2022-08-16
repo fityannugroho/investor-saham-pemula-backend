@@ -139,7 +139,8 @@ export class RegistrantsService {
    * @throws {NotFoundException} If the registrant is not found.
    */
   async deleteRegistrant(id: string): Promise<void> {
-    await this.getRegistrant(id);
+    const { idCard } = await this.getRegistrant(id);
+    await this.filesService.deleteFile(idCard);
     await this.prisma.registrant.delete({ where: { id } });
   }
 }
