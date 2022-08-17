@@ -52,7 +52,7 @@ export class RegistrantsController {
   ) {
     await this.registrantsService.uploadIdCard(id, req);
     return {
-      statusCode: 200,
+      statusCode: 201,
       message: 'Id card uploaded successfully',
     };
   }
