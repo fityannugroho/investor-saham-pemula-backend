@@ -48,19 +48,7 @@ export class MembersService {
    * @returns The members.
    */
   async getMembers() {
-    const members = await this.prisma.member.findMany({
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        createdAt: true,
-        acceptedAt: true,
-      },
-    });
-    return members.map(({ acceptedAt, ...member }) => ({
-      ...member,
-      isAccepted: !!acceptedAt,
-    }));
+    return await this.prisma.member.findMany();
   }
 
   /**
