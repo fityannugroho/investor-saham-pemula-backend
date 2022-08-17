@@ -6,6 +6,7 @@ import {
 import { nanoid } from 'nanoid';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { RegistrantsService } from 'src/registrants/registrants.service';
+import { parseIdCardUrl } from 'src/registrants/registrants.utils';
 import { AddBranchDataType } from './dto/add-branch-data.type';
 import { UpdateBranchDataType } from './dto/update-branch-data.type';
 
@@ -89,7 +90,11 @@ export class BranchesService {
     if (!branch) {
       throw new NotFoundException('Branch not found');
     }
-    return branch;
+
+    return {
+      ...branch,
+      registrant: parseIdCardUrl(branch.registrant),
+    };
   }
 
   /**
