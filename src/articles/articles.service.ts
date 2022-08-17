@@ -159,7 +159,7 @@ export class ArticlesService {
    */
   async getPhoto(id: string) {
     const { photo } = await this.getArticle(id);
-    return this.filesService.getFile(photo);
+    return await this.filesService.getFile(photo);
   }
 
   /**
