@@ -2044,6 +2044,7 @@
         "tags": [
           "Registrant"
         ],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -2054,6 +2055,15 @@
               "type": "string",
               "minLength": 16,
               "maxLength": 16
+            }
+          },
+          {
+            "name": "token",
+            "description": "The access token.",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],
