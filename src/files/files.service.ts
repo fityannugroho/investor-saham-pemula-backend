@@ -41,7 +41,7 @@ export class FilesService {
     },
   ): Promise<string> {
     if (!req.isMultipart) {
-      throw new BadRequestException('Expected multipart request');
+      throw new BadRequestException(['Expected multipart request']);
     }
 
     const { file, filename, mimetype } = await req.file({
@@ -49,14 +49,14 @@ export class FilesService {
     });
 
     if (file.readableLength === 0) {
-      throw new BadRequestException('Empty file');
+      throw new BadRequestException(['Empty file']);
     }
 
     // Validate the mimetype
     if (!allowedMimetypes.includes(mimetype)) {
-      throw new BadRequestException(
+      throw new BadRequestException([
         `Invalid mimetype! Only ${allowedMimetypes.join(', ')} are allowed`,
-      );
+      ]);
     }
 
     // Check if the destination directory exists. If not, create it.
@@ -72,9 +72,9 @@ export class FilesService {
     if (file.truncated) {
       // Delete the file if it was truncated.
       await this.deleteFile(filePath);
-      throw new BadRequestException(
+      throw new BadRequestException([
         `File is too large. Max: ${maxFileSize} bytes`,
-      );
+      ]);
     }
 
     return filePath;
