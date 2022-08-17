@@ -6,18 +6,26 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { FastifyRequest } from 'fastify';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { jwtConstants } from 'src/token/constant';
+import { TokenService } from 'src/token/token.service';
 import { AddRegistrantPayload } from './dto/add-registrant.payload';
+import { GetIdCardQuery } from './dto/get-id-card.query';
 import { GetRegistrantParam } from './dto/get-registrant.param';
 import { RegistrantsService } from './registrants.service';
 
 @Controller('registrants')
 export class RegistrantsController {
-  constructor(private readonly registrantsService: RegistrantsService) {}
+  constructor(
+    private readonly registrantsService: RegistrantsService,
+    private readonly tokenService: TokenService,
+  ) {}
 
   @Post()
   async addRegistrant(@Body() payload: AddRegistrantPayload) {
@@ -58,8 +66,17 @@ export class RegistrantsController {
   }
 
   @Get('/:id/idcard')
-  @UseGuards(JwtAuthGuard)
-  async getIdCard(@Param() { id }: GetRegistrantParam) {
+  async getIdCard(
+    @Param() { id }: GetRegistrantParam,
+    @Query() { token }: GetIdCardQuery,
+  ) {
+    try {
+      await this.tokenService.verifyJwtToken(token, {
+        secret: jwtConstants.accessTokenKey,
+      });
+    } catch (error) {
+      throw new UnauthorizedException();
+    }
     return await this.registrantsService.getIdCard(id);
   }
 
