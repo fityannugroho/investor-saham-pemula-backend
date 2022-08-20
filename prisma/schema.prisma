@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// Schema Reference: https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url = env("DATABASE_URL")
+}
+
+model Admin {
+  id String @id @db.VarChar(16)
+  name String @db.VarChar(255)
+  email String @unique @db.VarChar(320)
+  password String @db.Text
+  auth Auth?
+  articles Article[]
+  members Member[]
+  branches Branch[]
+
+  @@map("admins")
+}
+
+model Auth {
+  id String @id @db.VarChar(16)
+  admin Admin @relation(fields: [id], references: [id], onDelete: Cascade)
+  token String @db.Text
+
+  @@map("authentications")
+}
+
+model Category {
+  id String @id @db.VarChar(16)
+  name String @db.VarChar(255)
+  articles Article[]
+
+  @@map("categories")
+}
+
+model Article {
+  id String @id @db.VarChar(16)
+  title String @db.VarChar(255)
+  content String @db.Text
+  writer String @db.VarChar(255)
+  photo String? @db.VarChar(255)
+  createdAt DateTime @db.Timestamp @default(now()) @map("created_at")
+  updatedAt DateTime @db.Timestamp @default(now()) @updatedAt @map("updated_at")
+  categoryId String? @db.VarChar(16) @map("category_id")
+  category Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  adminId String? @db.VarChar(16) @map("admin_id")
+  admin Admin? @relation(fields: [adminId], references: [id], onDelete: SetNull)
+
+  @@map("articles")
+}
+
+model Member {
+  id String @id @db.VarChar(16)
+  name String @db.VarChar(255)
+  email String @unique @db.VarChar(320)
+  gender String @db.VarChar(50)
+  age Int @db.Int
+  address String @db.Text
+  socialMedia String @db.Text @map("social_media")
+  createdAt DateTime @db.Timestamp @default(now()) @map("created_at")
+  updatedAt DateTime @db.Timestamp @default(now()) @updatedAt @map("updated_at")
+  adminId String? @db.VarChar(16) @map("admin_id")
+  admin Admin? @relation(fields: [adminId], references: [id], onDelete: SetNull)
+  acceptedAt DateTime? @db.Timestamp @map("accepted_at")
+
+  @@map("members")
+}
+
+model Registrant {
+  id String @id @db.VarChar(16)
+  name String @db.VarChar(255)
+  email String @db.VarChar(320) @unique
+  idCard String @db.VarChar(255) @map("id_card")
+  cv String? @db.VarChar(255)
+  branch Branch?
+
+  @@map("registrants")
+}
+
+model Branch {
+  id String @id @db.VarChar(16)
+  location String @db.VarChar(255)
+  email String @db.VarChar(320) @unique
+  socialMedia String @db.VarChar(255) @map("social_media")
+  createdAt DateTime @db.Timestamp @default(now()) @map("created_at")
+  updatedAt DateTime @db.Timestamp @default(now()) @updatedAt @map("updated_at")
+  registrantId String? @db.VarChar(16) @unique @map("registrant_id")
+  registrant Registrant? @relation(fields: [registrantId], references: [id], onDelete: SetNull)
+  adminId String? @db.VarChar(16) @map("admin_id")
+  admin Admin? @relation(fields: [adminId], references: [id], onDelete: SetNull)
+  acceptedAt DateTime? @db.Timestamp @map("accepted_at")
+
+  @@map("branches")
+}

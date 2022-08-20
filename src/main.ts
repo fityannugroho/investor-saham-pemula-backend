@@ -1,9 +1,12 @@
+import fastifyMultipart from '@fastify/multipart';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import { SwaggerModule } from '@nestjs/swagger';
+import * as fs from 'fs';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -12,11 +15,23 @@ async function bootstrap() {
     new FastifyAdapter(),
   );
 
+  // Register fastifyMultipart plugin
+  app.register(fastifyMultipart);
+
   // Enable CORS
   app.enableCors();
 
   // Validate all endpoints
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
+
+  // Render the API documentation
+  const swaggerDoc = JSON.parse(fs.readFileSync('api.json').toString());
+  SwaggerModule.setup('docs', app, swaggerDoc);
 
   // Start the server
   const host = process.env.HOST || '0.0.0.0';

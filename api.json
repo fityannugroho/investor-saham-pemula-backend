@@ -1,0 +1,2866 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Investor Saham Pemula Web API",
+    "description": "The Back-End of Investor Saham Pemula Website."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "externalDocs": {
+    "description": "GitHub Repository",
+    "url": "https://github.com/fityannugroho/investor-saham-pemula-backend"
+  },
+  "paths": {
+    "/auth": {
+      "post": {
+        "summary": "Login",
+        "description": "Login to the system.",
+        "tags": [
+          "Auth"
+        ],
+        "security": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 320
+                  },
+                  "password": {
+                    "type": "string",
+                    "maxLength": 255
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          },
+          "description": "The body of the request."
+        },
+        "responses": {
+          "200": {
+            "description": "**OK**. Returns the access token and the refresh token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "accessToken": {
+                          "type": "string"
+                        },
+                        "refreshToken": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "accessToken",
+                        "refreshToken"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "statusCode": 201,
+                  "message": "Login successful",
+                  "data": {
+                    "accessToken": "<JWT>",
+                    "refreshToken": "<JWT>"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "description": "**Unauthorized**. If the credentials are incorrect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message",
+                    "error"
+                  ]
+                },
+                "example": {
+                  "statusCode": 401,
+                  "message": "Incorrect credentials",
+                  "error": "Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get Profile",
+        "description": "Get the profile of the logged user.",
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**. Returns the profile of the logged user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 16,
+                      "maxLength": 16
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "iat": {
+                      "type": "integer"
+                    },
+                    "exp": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "email",
+                    "iat",
+                    "exp"
+                  ]
+                },
+                "example": {
+                  "id": "Ta2bl7-H6zSnKhEY",
+                  "name": "John Doe",
+                  "email": "johndoe@email.com",
+                  "iat": 1588897200,
+                  "exp": 1588897200
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Token",
+        "description": "Update the access token.",
+        "tags": [
+          "Auth"
+        ],
+        "security": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "refreshToken": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "refreshToken"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "**OK**. Returns the updated access token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "accessToken": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "accessToken"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "statusCode": 200,
+                  "message": "Access token updated successfully",
+                  "data": {
+                    "accessToken": "<JWT>"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Logout",
+        "description": "Logout from the system.",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "refreshToken": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "refreshToken"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "**OK**. Returns the message.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message"
+                  ]
+                },
+                "example": {
+                  "statusCode": 200,
+                  "message": "Logout successful"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/admins/{id}": {
+      "get": {
+        "summary": "Get Admin",
+        "description": "Get an admin by its id.",
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The admin id which must match the **Nano ID** format.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 16
+            },
+            "example": "Ta2bl7-H6zSnKhEY"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**. Returns an admin.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 16,
+                      "maxLength": 16
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 255
+                    },
+                    "email": {
+                      "type": "string",
+                      "format": "email",
+                      "maxLength": 320
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "email"
+                  ]
+                },
+                "example": {
+                  "id": "Ta2bl7-H6zSnKhEY",
+                  "name": "John Doe",
+                  "email": "johndoe@email.com"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "description": "**Not Found**. If the admin does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Admin not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Admin",
+        "description": "Delete an admin.",
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The admin id which must match the **Nano ID** format.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 16
+            },
+            "example": "Ta2bl7-H6zSnKhEY"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message"
+                  ]
+                },
+                "example": {
+                  "statusCode": 200,
+                  "message": "Admin deleted successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "description": "**Not Found**. If the admin does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Admin not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/articles": {
+      "post": {
+        "summary": "Create Article",
+        "description": "Create an article.",
+        "tags": [
+          "Article"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "writer": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "categoryId": {
+                    "type": "string",
+                    "minLength": 16,
+                    "maxLength": 16
+                  }
+                },
+                "required": [
+                  "title",
+                  "content",
+                  "writer"
+                ]
+              },
+              "examples": {
+                "Default": {
+                  "value": {
+                    "title": "Lorem Ipsun",
+                    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                    "writer": "John Doe"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "**Created**. Returns the created article id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "articleId": {
+                          "type": "string",
+                          "minLength": 16,
+                          "maxLength": 16
+                        }
+                      },
+                      "required": [
+                        "articleId"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "statusCode": 201,
+                  "message": "Article created successfully",
+                  "data": {
+                    "articleId": "Ta2bl7-H6zSnKhEY"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get Articles",
+        "description": "Get articles by perform filtering and sorting optionally.",
+        "tags": [
+          "Article"
+        ],
+        "security": [],
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Filter the articles by the title that match the `search` keywords. If there are no any article matched, an empty array will be returned.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Lorem Ipsun"
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Sort the articles by `date` or `title`. Default: `date`",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "date"
+          },
+          {
+            "name": "categoryId",
+            "in": "query",
+            "description": "Get articles from specific category. `categoryId` must match the **Nano ID** format or **leave it empty**.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "examples": {
+              "Get articles in a category": {
+                "value": "Ta2bl7-H6zSnKhEY"
+              },
+              "Get articles which don't have category": {
+                "value": ""
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**. Returns the articles.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "minLength": 16,
+                        "maxLength": 16
+                      },
+                      "title": {
+                        "type": "string",
+                        "maxLength": 255
+                      },
+                      "content": {
+                        "type": "string"
+                      },
+                      "photo": {
+                        "type": "string",
+                        "maxLength": 255
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "title",
+                      "content",
+                      "photo",
+                      "createdAt"
+                    ]
+                  }
+                },
+                "examples": {
+                  "Default": {
+                    "description": "If there are articles matched, an array of articles will be returned.",
+                    "value": [
+                      {
+                        "id": "Ta2bl7-H6zSnKhEY",
+                        "title": "Lorem Ipsun",
+                        "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                        "photo": "<photo url>",
+                        "createdAt": "2020-02-01T01:12:21"
+                      }
+                    ]
+                  },
+                  "Empty Array": {
+                    "description": "If there are no articles matched, an empty array will be returned.",
+                    "value": []
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/articles/{id}": {
+      "get": {
+        "summary": "Get Article",
+        "description": "Get an article by its id.",
+        "tags": [
+          "Article"
+        ],
+        "security": [],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The article id which must match the **Nano ID** format.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 16
+            },
+            "example": "Ta2bl7-H6zSnKhEY"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**. Returns an article.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetArticle"
+                },
+                "example": {
+                  "id": "Ta2bl7-H6zSnKhEY",
+                  "title": "Lorem Ipsun",
+                  "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                  "writer": "John Doe",
+                  "photo": "<photo url>",
+                  "createdAt": "2020-02-01T01:12:21",
+                  "updatedAt": "2020-02-01T01:12:21",
+                  "adminId": "Ta2bl7-H6zSnKhEY",
+                  "categoryId": "Ta2bl7-H6zSnKhEY",
+                  "category": {
+                    "id": "Ta2bl7-H6zSnKhEY",
+                    "name": "Events"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "description": "**Not Found**. If article is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Article not found",
+                  "data": {
+                    "articleId": "Ta2bl7-H6zSnKhEY"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Article",
+        "description": "Update an article by its id.",
+        "tags": [
+          "Article"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The article id which must match the **Nano ID** format.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 16
+            },
+            "example": "Ta2bl7-H6zSnKhEY"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "writer": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "categoryId": {
+                    "type": "string",
+                    "minLength": 16,
+                    "maxLength": 16
+                  }
+                }
+              },
+              "examples": {
+                "Update Title Only": {
+                  "description": "Update the title of the article.",
+                  "value": {
+                    "title": "New Lorem Ipsun"
+                  }
+                },
+                "Update Content Only": {
+                  "description": "Update the content of the article.",
+                  "value": {
+                    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                  }
+                },
+                "Update Title and Content": {
+                  "description": "Update the title and content of the article.",
+                  "value": {
+                    "title": "New Lorem Ipsun",
+                    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "**OK**. If article is updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/GetArticle"
+                    }
+                  }
+                },
+                "example": {
+                  "statusCode": 200,
+                  "message": "Article updated successfully",
+                  "data": {
+                    "id": "Ta2bl7-H6zSnKhEY",
+                    "title": "New Lorem Ipsun",
+                    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                    "writer": "John Doe",
+                    "photo": "<photo url>",
+                    "createdAt": "2020-02-01T01:12:21",
+                    "updatedAt": "2020-02-01T01:12:21",
+                    "adminId": "Ta2bl7-H6zSnKhEY",
+                    "categoryId": "Ta2bl7-H6zSnKhEY"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "description": "**Not Found**. If article is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Article not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Article",
+        "description": "Delete an article by its id.",
+        "tags": [
+          "Article"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The article id which must match the **Nano ID** format.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 16
+            },
+            "example": "Ta2bl7-H6zSnKhEY"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**. If article is deleted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "statusCode": 200,
+                  "message": "Article deleted successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "description": "**Not Found**. If article is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Article not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/articles/{id}/photo": {
+      "post": {
+        "summary": "Upload Article Photo",
+        "description": "Upload an article photo by its id.",
+        "tags": [
+          "Article"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The article id which must match the **Nano ID** format.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 16
+            },
+            "example": "Ta2bl7-H6zSnKhEY"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "photo": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "photo"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "**OK**. If article photo is uploaded successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "statusCode": 201,
+                  "message": "Article photo uploaded successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "description": "**Not Found**. If article is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Article not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get Article Photo",
+        "description": "Get an article photo by its id.",
+        "tags": [
+          "Article"
+        ],
+        "security": [{}],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The article id which must match the **Nano ID** format.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 16
+            },
+            "example": "Ta2bl7-H6zSnKhEY"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**. If article photo is found successfully.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "description": "**Not Found**. If article is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Article not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Article Photo",
+        "description": "Delete an article photo by its id.",
+        "tags": [
+          "Article"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The article id which must match the **Nano ID** format.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 16
+            },
+            "example": "Ta2bl7-H6zSnKhEY"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**. If article photo is deleted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "statusCode": 200,
+                  "message": "Article photo deleted successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "description": "**Not Found**. If article is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Article not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/categories": {
+      "get": {
+        "summary": "Get Categories",
+        "description": "Get all categories.",
+        "tags": [
+          "Category"
+        ],
+        "security": [],
+        "parameters": [
+          {
+            "name": "sortBy",
+            "description": "Sort the categories by `id` or `name`. Default: `id`.",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id"
+            },
+            "example": "name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**. If categories are found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetCategory"
+                  }
+                },
+                "example": [
+                  {
+                    "id": "Ta2bl7-H6zSnKhEY",
+                    "name": "Events"
+                  },
+                  {
+                    "id": "Ta2bl7-H6zSnKhEY",
+                    "name": "Stocks"
+                  }
+                ]
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/categories/{id}": {
+      "get": {
+        "summary": "Get Category",
+        "description": "Get a category by its id.",
+        "tags": [
+          "Category"
+        ],
+        "security": [{}],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The category id which must match the **Nano ID** format.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 16
+            },
+            "example": "Ta2bl7-H6zSnKhEY"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**. If category is found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCategory"
+                },
+                "example": {
+                  "id": "Ta2bl7-H6zSnKhEY",
+                  "name": "Events"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "description": "**Not Found**. If category is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Category not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/members": {
+      "post": {
+        "summary": "Register Member",
+        "description": "Register a new member.",
+        "tags": [
+          "Member"
+        ],
+        "security": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 320
+                  },
+                  "gender": {
+                    "type": "string",
+                    "maxLength": 50
+                  },
+                  "age": {
+                    "type": "integer"
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "socialMedia": {
+                    "type": "string",
+                    "maxLength": 255
+                  }
+                },
+                "required": [
+                  "name",
+                  "email",
+                  "gender",
+                  "age",
+                  "address",
+                  "socialMedia"
+                ]
+              },
+              "examples": {
+                "Register Member": {
+                  "description": "Register a new member.",
+                  "value": {
+                    "name": "John Doe",
+                    "email": "johndoe@email.com",
+                    "gender": "male",
+                    "age": 25,
+                    "address": "California, USA",
+                    "socialMedia": "@johndoe"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "**Created**. If member is registered successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "memberId": {
+                          "type": "string",
+                          "maxLength": 16,
+                          "minLength": 16
+                        }
+                      },
+                      "required": [
+                        "memberId"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "statusCode": 201,
+                  "message": "Member registered successfully",
+                  "data": {
+                    "memberId": "Ta2bl7-H6zSnKhEY"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get Members",
+        "description": "Get all members.",
+        "tags": [
+          "Member"
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**. If members are found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMember"
+                },
+                "example": [
+                  {
+                    "id": "Ta2bl7-H6zSnKhEY",
+                    "name": "John Doe",
+                    "email": "johndoe@gmail.com",
+                    "gender": "male",
+                    "age": 25,
+                    "address": "California, USA",
+                    "socialMedia": "@johndoe",
+                    "createdAt": "2020-02-01T01:12:21",
+                    "updatedAt": "2020-02-01T01:12:21",
+                    "adminId": "Ta2bl7-H6zSnKhEY",
+                    "acceptedAt": "2020-02-01T01:12:21"
+                  }
+                ]
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/members/{id}": {
+      "get": {
+        "summary": "Get Member",
+        "description": "Get a member by its id.",
+        "tags": [
+          "Member"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The member id which must match the **Nano ID** format.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 16,
+              "minLength": 16
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**. If member is found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMember"
+                },
+                "example": {
+                  "id": "Ta2bl7-H6zSnKhEY",
+                  "name": "John Doe",
+                  "email": "johndoe@gmail.com",
+                  "gender": "male",
+                  "age": 25,
+                  "address": "California, USA",
+                  "socialMedia": "@johndoe",
+                  "createdAt": "2020-02-01T01:12:21",
+                  "updatedAt": "2020-02-01T01:12:21",
+                  "adminId": "Ta2bl7-H6zSnKhEY",
+                  "acceptedAt": "2020-02-01T01:12:21"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "description": "**Not Found**. If member is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Member not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Member",
+        "description": "Delete a member by its id.",
+        "tags": [
+          "Member"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The member id which must match the **Nano ID** format.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 16,
+              "minLength": 16
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**. If member is deleted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message"
+                  ]
+                },
+                "example": {
+                  "statusCode": 200,
+                  "message": "Member deleted successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "description": "**Not Found**. If member is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Member not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/registrants": {
+      "post": {
+        "summary": "Add Registrant",
+        "description": "Add a new registrant.",
+        "tags": [
+          "Registrant"
+        ],
+        "security": [{}],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 320
+                  }
+                }
+              },
+              "example": {
+                "name": "John Doe",
+                "email": "johndoe@email.com"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "**OK**. If registrant is added successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "registrantId": {
+                          "type": "string",
+                          "maxLength": 16,
+                          "minLength": 16
+                        }
+                      },
+                      "required": [
+                        "registrantId"
+                      ]
+                    }
+                  }
+                },
+                "example": {
+                  "statusCode": 200,
+                  "message": "Registrant added successfully",
+                  "data": {
+                    "registrantId": "Ta2bl7-H6zSnKhEY"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/registrants/{id}": {
+      "patch": {
+        "summary": "Update Registrant",
+        "description": "Update a registrant by its id.",
+        "tags": [
+          "Registrant"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The registrant id which must match the **Nano ID** format.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 16,
+              "minLength": 16
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 320
+                  }
+                }
+              },
+              "example": {
+                "name": "John Done",
+                "email": "johndone@email.com"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "**OK**. If registrant is updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/GetRegistrant"
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "statusCode": 200,
+                  "message": "Registrant updated successfully",
+                  "data": {
+                    "id": "Ta2bl7-H6zSnKhEY",
+                    "name": "John Done",
+                    "email": "johndone@email.com"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "description": "**Not Found**. If registrant is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Registrant not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Registrant",
+        "description": "Delete a registrant by its id.",
+        "tags": [
+          "Registrant"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The registrant id which must match the **Nano ID** format.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 16,
+              "minLength": 16
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**. If registrant is deleted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message"
+                  ]
+                },
+                "example": {
+                  "statusCode": 200,
+                  "message": "Registrant deleted successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "description": "**Not Found**. If registrant is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Registrant not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/registrants/{id}/idcard": {
+      "post": {
+        "summary": "Upload ID Card",
+        "description": "Upload an registrant ID Card.",
+        "tags": [
+          "Registrant"
+        ],
+        "security": [{}],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The registrant id which must match the **Nano ID** format.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 16
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "idCard": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "idCard"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "**OK**. If the ID card is uploaded successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "statusCode": 201,
+                  "message": "ID card uploaded successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "description": "**Not Found**. If registrant is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Registrant not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get ID Card",
+        "description": "Get an registrant ID Card.",
+        "tags": [
+          "Registrant"
+        ],
+        "security": [],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The registrant id which must match the **Nano ID** format.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 16
+            }
+          },
+          {
+            "name": "token",
+            "description": "The access token.",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**. If the registrant ID card is found successfully.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "description": "**Not Found**. If registrant is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Registrant not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/branches": {
+      "post": {
+        "summary": "Register Branch",
+        "description": "Register a new branch.",
+        "tags": [
+          "Branch"
+        ],
+        "security": [{}],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "location": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 320
+                  },
+                  "socialMedia": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "registrantId": {
+                    "type": "string",
+                    "maxLength": 16,
+                    "minLength": 16
+                  }
+                },
+                "required": [
+                  "location",
+                  "email",
+                  "socialMedia"
+                ]
+              },
+              "example": {
+                "location": "Jakarta",
+                "email": "ispjakarta@email.com",
+                "socialMedia": "@ispjakarta",
+                "registrantId": "Ta2bl7-H6zSnKhEY"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "**Created**. If branch is created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "branchId": {
+                          "type": "string",
+                          "maxLength": 16,
+                          "minLength": 16
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "statusCode": 201,
+                  "message": "Branch registered successfully",
+                  "data": {
+                    "branchId": "Ta2bl7-H6zSnKhEY"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get Branches",
+        "description": "Get all branches.",
+        "tags": [
+          "Branch"
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**. Returns all branches.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetBranch"
+                  }
+                },
+                "example": [
+                  {
+                    "id": "Ta2bl7-H6zSnKhEY",
+                    "location": "Jakarta",
+                    "email": "ispjakarta@email.com",
+                    "socialMedia": "@ispjakarta",
+                    "createdAt": "2022-08-14T14:24:31.000Z",
+                    "updatedAt": "2022-08-14T14:24:31.000Z",
+                    "registrantId": "Ta2bl7-H6zSnKhEY",
+                    "adminId": null,
+                    "acceptedAt": null
+                  }
+                ]
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/branches/{id}": {
+      "get": {
+        "summary": "Get Branch",
+        "description": "Get a branch by its id.",
+        "tags": [
+          "Branch"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The branch id which must match the **Nano ID** format.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 16,
+              "minLength": 16
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**. Returns a branch.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBranch"
+                },
+                "example": {
+                  "id": "Ta2bl7-H6zSnKhEY",
+                  "location": "Jakarta",
+                  "email": "ispjakarta@email.com",
+                  "socialMedia": "@ispjakarta",
+                  "createdAt": "2022-08-14T14:24:31.000Z",
+                  "updatedAt": "2022-08-14T14:24:31.000Z",
+                  "registrantId": "Ta2bl7-H6zSnKhEY",
+                  "adminId": null,
+                  "acceptedAt": null,
+                  "registrant": {
+                    "id": "Ta2bl7-H6zSnKhEY",
+                    "name": "John Doe",
+                    "email": "johndoe@email.com",
+                    "idCard": "",
+                    "cv": null
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "description": "**Not Found**. If the branch is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Branch not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Branch",
+        "description": "Update a branch by its id.",
+        "tags": [
+          "Branch"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The branch id which must match the **Nano ID** format.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 16,
+              "minLength": 16
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "location": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 320
+                  },
+                  "socialMedia": {
+                    "type": "string",
+                    "maxLength": 255
+                  }
+                }
+              },
+              "examples": {
+                "Default": {
+                  "value": {
+                    "location": "Jakarta",
+                    "email": "newispjakarta@email.com",
+                    "socialMedia": "@newispjakarta"
+                  }
+                },
+                "UpdateLocationOnly": {
+                  "summary": "Update Location Only",
+                  "value": {
+                    "location": "Jakarta"
+                  }
+                },
+                "UpdateEmailOnly": {
+                  "summary": "Update Email Only",
+                  "value": {
+                    "email": "newispjakarta@email.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "**OK**. If the branch is updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/GetBranch"
+                    }
+                  }
+                },
+                "example": {
+                  "statusCode": 200,
+                  "message": "Branch updated successfully",
+                  "data": {
+                    "id": "Ta2bl7-H6zSnKhEY",
+                    "location": "Jakarta",
+                    "email": "newispjakarta@email.com",
+                    "socialMedia": "@newispjakarta",
+                    "createdAt": "2022-08-14T14:24:31.000Z",
+                    "updatedAt": "2022-08-14T14:24:31.000Z",
+                    "registrantId": "Ta2bl7-H6zSnKhEY",
+                    "adminId": null,
+                    "acceptedAt": null
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "description": "**Not Found**. If the branch is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Branch not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Branch",
+        "description": "Delete a branch by its id.",
+        "tags": [
+          "Branch"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The branch id which must match the **Nano ID** format.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 16,
+              "minLength": 16
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**. If the branch is deleted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message"
+                  ]
+                },
+                "example": {
+                  "statusCode": 200,
+                  "message": "Branch deleted successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "description": "**Not Found**. If the branch is not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Branch not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/statistics": {
+      "get": {
+        "summary": "Get Statistics",
+        "description": "Get statistics of data.",
+        "tags": [
+          "Statistics"
+        ],
+        "security": [{}],
+        "responses": {
+          "200": {
+            "description": "**OK**. Returns statistics of data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "article": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer"
+                        },
+                        "categories": {
+                          "type": "object",
+                          "properties": {
+                            "names": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "counts": {
+                              "type": "array",
+                              "items": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "member": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "branch": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "article": {
+                    "total": 10,
+                    "categories": {
+                      "names": [
+                        "Article",
+                        "Event",
+                        "Stock"
+                      ],
+                      "counts": [
+                        1,
+                        2,
+                        3
+                      ]
+                    }
+                  },
+                  "member": {
+                    "total": 10
+                  },
+                  "branch": {
+                    "total": 10
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "BadRequest": {
+        "description": "**Bad Request**. If there are validation errors in the parameters or request body.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "statusCode",
+                "message",
+                "error"
+              ],
+              "properties": {
+                "statusCode": {
+                  "type": "integer"
+                },
+                "message": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "example": {
+              "statusCode": 400,
+              "message": [
+                "<error message>",
+                "..."
+              ],
+              "error": "Bad Request"
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "**Unauthorized**. If the resource is protected and the user is not authorized to access it.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Unauthorized"
+            },
+            "example": {
+              "statusCode": 401,
+              "message": "Unauthorized"
+            }
+          }
+        }
+      },
+      "InternalServerError": {
+        "description": "**Internal Server Error**. If there is any error on the server.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "statusCode",
+                "message"
+              ],
+              "properties": {
+                "statusCode": {
+                  "type": "integer"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            },
+            "example": {
+              "statusCode": 500,
+              "message": "Internal Server Error"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "NotFound": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "statusCode",
+          "message",
+          "error"
+        ]
+      },
+      "Unauthorized": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "statusCode",
+          "message"
+        ]
+      },
+      "GetArticle": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 16
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "content": {
+            "type": "string"
+          },
+          "writer": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "photo": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "adminId": {
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 16
+          },
+          "categoryId": {
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 16
+          },
+          "category": {
+            "$ref": "#/components/schemas/GetCategory"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "content",
+          "writer",
+          "photo",
+          "createdAt",
+          "updatedAt",
+          "adminId",
+          "categoryId"
+        ]
+      },
+      "GetCategory": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 16
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "GetMember": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 16
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 255
+          },
+          "gender": {
+            "type": "string",
+            "enum": ["male", "female"]
+          },
+          "age": {
+            "type": "integer"
+          },
+          "address": {
+            "type": "string"
+          },
+          "socialMedia": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "adminId": {
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 16
+          },
+          "acceptedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "gender",
+          "age",
+          "address",
+          "socialMedia",
+          "createdAt",
+          "updatedAt",
+          "adminId",
+          "acceptedAt"
+        ]
+      },
+      "GetRegistrant": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 16
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 320
+          }
+        }
+      },
+      "GetBranch": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 16
+          },
+          "location": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 320
+          },
+          "socialMedia": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "registrantId": {
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 16
+          },
+          "adminId": {
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 16
+          },
+          "acceptedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "registrant": {
+            "$ref": "#/components/schemas/GetRegistrant"
+          }
+        },
+        "required": [
+          "id",
+          "location",
+          "email",
+          "socialMedia",
+          "createdAt",
+          "updatedAt",
+          "registrantId",
+          "adminId",
+          "acceptedAt"
+        ]
+      }
+    },
+    "examples": {
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ]
+}
