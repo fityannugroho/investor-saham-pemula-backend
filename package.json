@@ -23,7 +23,8 @@
     "migrate": "prisma migrate dev",
     "migrate:reset": "prisma migrate reset",
     "migrate:deploy": "prisma migrate deploy",
-    "seed": "ts-node ./prisma/seed/index.ts"
+    "seed": "ts-node ./prisma/seed/index.ts",
+    "postinstall": "npm run prisma:gen"
   },
   "dependencies": {
     "@fastify/multipart": "^7.4.1",
