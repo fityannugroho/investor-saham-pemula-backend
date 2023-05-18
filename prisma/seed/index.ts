@@ -2,6 +2,8 @@ import { faker } from '@faker-js/faker';
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { nanoid } from 'nanoid';
+import { stdin as input, stdout as output } from 'process';
+import { createInterface } from 'readline';
 
 const prisma = new PrismaClient();
 
@@ -61,10 +63,28 @@ const addCategories = async (amount = 1) => {
 };
 
 async function main() {
+  // Confirmation prompt
+  const rl = createInterface({ input, output });
+  const answer: string = await new Promise((resolve) =>
+    rl.question(
+      'All data will be deleted. Are you sure to continue? (y/N) ',
+      resolve,
+    ),
+  );
+
+  if (answer.toLowerCase() !== 'y') {
+    console.info('Aborted.');
+    process.exit();
+  }
+
+  // Seeder
   await emptyTable('admins');
   await addAdmin();
   await emptyTable('categories');
   await addCategories(10);
+
+  console.info('Done.');
+  process.exit();
 }
 
 main()
